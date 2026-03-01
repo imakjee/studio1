@@ -68,9 +68,8 @@ export function Footer() {
             <h4 className="font-bold text-lg mb-8">Company</h4>
             <ul className="space-y-4 text-white/40 text-sm">
               <li><Link href="/about" className="hover:text-accent transition-colors">About Us</Link></li>
-              <li><Link href="/#pricing" className="hover:text-accent transition-colors">Pricing</Link></li>
-              <li><a href={WHMCS_LINKS.ANNOUNCEMENTS} className="hover:text-accent transition-colors">Company Blog</a></li>
-              <li><a href={WHMCS_LINKS.SUPPORT_TICKETS} className="hover:text-accent transition-colors">Contact Support</a></li>
+              <li><Link href="/blog" className="hover:text-accent transition-colors">Company Blog</Link></li>
+              <li><Link href="/contact" className="hover:text-accent transition-colors">Contact Support</Link></li>
               <li><a href={WHMCS_LINKS.CLIENT_AREA} className="hover:text-accent transition-colors">Affiliate Program</a></li>
             </ul>
           </div>
@@ -82,8 +81,8 @@ export function Footer() {
               <li><a href={WHMCS_LINKS.KNOWLEDGEBASE} className="hover:text-accent transition-colors">Knowledgebase</a></li>
               <li><a href={WHMCS_LINKS.CLIENT_AREA} className="hover:text-accent transition-colors">Client Portal</a></li>
               <li><a href={WHMCS_LINKS.SUPPORT_TICKETS} className="hover:text-accent transition-colors">Submit Ticket</a></li>
-              <li><a href={WHMCS_LINKS.LOGIN} className="hover:text-accent transition-colors">Account Login</a></li>
-              <li><a href={WHMCS_LINKS.REGISTER} className="hover:text-accent transition-colors">Register Account</a></li>
+              <li><Link href="/login" className="hover:text-accent transition-colors">Account Login</Link></li>
+              <li><Link href="/register" className="hover:text-accent transition-colors">Register Account</Link></li>
             </ul>
           </div>
         </div>

@@ -4,4 +4,13 @@
 runConfig:
   # Increase this value if you'd like to automatically spin up
   # more instances in response to increased traffic.
-  maxInstances: 1
+  maxInstances: 5
+  memory: 1024Mi
+
+env:
+  - variable: WHMCS_API_URL
+    value: https://your-whmcs-url.com/includes/api.php
+  - variable: WHMCS_API_IDENTIFIER
+    value: YOUR_IDENTIFIER
+  - variable: WHMCS_API_SECRET
+    value: YOUR_SECRET

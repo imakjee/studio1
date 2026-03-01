@@ -11,6 +11,8 @@ export default function sitemap(): MetadataRoute.Sitemap {
     '/dedicated',
     '/cloud',
     '/about',
+    '/blog',
+    '/contact',
   ];
 
   return pages.map((page) => ({
