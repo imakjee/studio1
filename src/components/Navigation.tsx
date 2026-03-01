@@ -1,10 +1,9 @@
-
 "use client";
 
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Rocket } from "lucide-react";
+import { Menu, X, Rocket, User } from "lucide-react";
 import { cn } from "@/lib/utils";
 
 export function Navigation() {
@@ -20,25 +19,25 @@ export function Navigation() {
   }, []);
 
   const menuItems = [
-    { name: "Home", href: "#" },
     { name: "Hosting", href: "#" },
     { name: "VPS", href: "#vps" },
     { name: "WordPress", href: "#wordpress" },
     { name: "Pricing", href: "#pricing" },
-    { name: "Contact", href: "#" },
+    { name: "Blog", href: "#" },
+    { name: "Support", href: "#" },
   ];
 
   return (
     <nav
       className={cn(
         "fixed top-0 left-0 right-0 z-50 transition-all duration-300 py-4 px-6 md:px-12",
-        isScrolled ? "bg-white shadow-md py-3" : "bg-transparent"
+        isScrolled ? "bg-white/80 backdrop-blur-md shadow-md py-3" : "bg-transparent"
       )}
     >
       <div className="max-w-7xl mx-auto flex items-center justify-between">
         <Link href="/" className="flex items-center gap-2 group">
           <div className="bg-accent rounded-lg p-1.5 transition-transform group-hover:scale-110">
-            <Rocket className="h-6 w-6 text-white" />
+            <Rocket className="h-6 w-6 text-black" />
           </div>
           <span className={cn(
             "text-2xl font-headline font-bold transition-colors",
@@ -56,15 +55,27 @@ export function Navigation() {
               href={item.href}
               className={cn(
                 "text-sm font-medium transition-colors hover:text-accent",
-                isScrolled ? "text-foreground" : "text-white"
+                isScrolled ? "text-foreground" : "text-white/80"
               )}
             >
               {item.name}
             </Link>
           ))}
-          <Button className="bg-accent hover:bg-accent/90 text-white font-medium rounded-lg">
-            Get Started
-          </Button>
+          <div className="flex items-center gap-4 ml-4">
+            <Link 
+              href="#" 
+              className={cn(
+                "text-sm font-medium flex items-center gap-2",
+                isScrolled ? "text-foreground" : "text-white"
+              )}
+            >
+              <User className="h-4 w-4" />
+              Log In
+            </Link>
+            <Button className="bg-accent hover:bg-accent/90 text-black font-bold rounded-lg px-6">
+              Get Started
+            </Button>
+          </div>
         </div>
 
         {/* Mobile Toggle */}
@@ -93,7 +104,7 @@ export function Navigation() {
               {item.name}
             </Link>
           ))}
-          <Button className="bg-accent hover:bg-accent/90 text-white font-medium w-full py-6 text-lg">
+          <Button className="bg-accent hover:bg-accent/90 text-black font-bold w-full py-6 text-lg">
             Get Started
           </Button>
         </div>

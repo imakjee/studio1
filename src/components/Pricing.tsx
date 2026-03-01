@@ -1,96 +1,115 @@
-
 "use client";
 
-import { Check } from "lucide-react";
+import { useState } from "react";
+import { Check, Info } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
+import { Switch } from "@/components/ui/switch";
+import { Label } from "@/components/ui/label";
 
 export function Pricing() {
+  const [isYearly, setIsYearly] = useState(true);
+
   const plans = [
     {
-      name: "Basic",
-      price: "1.99",
+      name: "Starter",
+      desc: "Perfect for a small personal website",
+      price: isYearly ? "1.99" : "3.99",
       features: ["1 Website", "10GB NVMe Storage", "Free SSL", "Standard Support"],
       highlight: false,
     },
     {
-      name: "Standard",
-      price: "2.99",
-      features: ["5 Websites", "50GB NVMe Storage", "Free Domain (1 yr)", "24/7 Priority Support", "Daily Backups"],
+      name: "Business",
+      desc: "Best for growing business websites",
+      price: isYearly ? "2.99" : "5.99",
+      features: ["10 Websites", "100GB NVMe Storage", "Free Domain (1 yr)", "24/7 Priority Support", "Daily Backups"],
       highlight: true,
-      badge: "Most Popular",
+      badge: "Best Value",
     },
     {
-      name: "Premium",
-      price: "6.99",
-      features: ["Unlimited Websites", "200GB NVMe Storage", "Free Domain & SSL", "Dedicated Account Manager", "Advanced Analytics"],
+      name: "Cloud Pro",
+      desc: "Designed for high-traffic platforms",
+      price: isYearly ? "6.99" : "12.99",
+      features: ["Unlimited Websites", "500GB NVMe Storage", "Dedicated IP", "Advanced Security Suite", "24/7 Priority Support"],
       highlight: false,
     },
   ];
 
   return (
-    <section id="pricing" className="py-24 bg-white">
+    <section id="pricing" className="py-24 bg-[#F8FAFC]">
       <div className="max-w-7xl mx-auto px-6">
-        <div className="text-center mb-16">
-          <h2 className="text-foreground font-headline font-semibold text-3xl md:text-[32px] mb-4">
-            Simple, Transparent Pricing
+        <div className="text-center mb-12">
+          <Badge variant="outline" className="border-primary text-primary px-4 py-1 mb-4 rounded-full font-bold">PRICING PLANS</Badge>
+          <h2 className="text-foreground font-headline font-bold text-3xl md:text-5xl mb-6">
+            Choose Your Perfect Plan
           </h2>
-          <p className="text-muted-foreground text-lg max-w-2xl mx-auto">
-            Choose the plan that's right for your business. No hidden fees, no surprises.
-          </p>
+          
+          <div className="flex items-center justify-center gap-4 mb-12">
+            <Label className={!isYearly ? "text-foreground font-bold" : "text-muted-foreground"}>Monthly</Label>
+            <Switch 
+              checked={isYearly} 
+              onCheckedChange={setIsYearly}
+              className="data-[state=checked]:bg-primary"
+            />
+            <div className="flex items-center gap-2">
+              <Label className={isYearly ? "text-foreground font-bold" : "text-muted-foreground"}>Yearly</Label>
+              <Badge className="bg-green-100 text-green-700 hover:bg-green-100 border-none font-bold">Save 50%</Badge>
+            </div>
+          </div>
         </div>
 
-        <div className="grid grid-cols-1 md:grid-cols-3 gap-8">
+        <div className="grid grid-cols-1 md:grid-cols-3 gap-8 items-stretch">
           {plans.map((plan, idx) => (
             <Card 
               key={idx} 
-              className={`relative flex flex-col transition-all duration-300 hover:-translate-y-2 ${
+              className={`relative flex flex-col transition-all duration-300 border-none shadow-lg ${
                 plan.highlight 
-                  ? "border-2 border-accent shadow-xl scale-105 z-10" 
-                  : "border border-border shadow-sm"
+                  ? "ring-2 ring-primary scale-105 z-10" 
+                  : "hover:scale-[1.02]"
               }`}
             >
               {plan.badge && (
-                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2">
-                  <Badge className="bg-accent hover:bg-accent text-white px-4 py-1 text-sm rounded-full">
+                <div className="absolute top-0 left-1/2 -translate-x-1/2 -translate-y-1/2 z-20">
+                  <Badge className="bg-primary text-white px-6 py-1 text-sm rounded-full font-bold uppercase tracking-wider">
                     {plan.badge}
                   </Badge>
                 </div>
               )}
-              <CardHeader className="text-center pb-2">
-                <CardTitle className="text-xl text-muted-foreground font-medium uppercase tracking-wider">
+              <CardHeader className="text-left pt-8 pb-4">
+                <CardTitle className="text-2xl font-bold mb-1">
                   {plan.name}
                 </CardTitle>
-                <div className="flex items-center justify-center gap-1 mt-4">
-                  <span className="text-2xl font-bold align-top mt-2">$</span>
-                  <span className="text-[56px] font-bold text-foreground leading-none">{plan.price}</span>
-                  <span className="text-muted-foreground">/mo</span>
+                <p className="text-muted-foreground text-sm">{plan.desc}</p>
+                <div className="flex items-baseline gap-1 mt-6">
+                  <span className="text-2xl font-bold">$</span>
+                  <span className="text-5xl font-black text-foreground">{plan.price}</span>
+                  <span className="text-muted-foreground font-medium">/mo</span>
                 </div>
               </CardHeader>
-              <CardContent className="flex-grow pt-6">
+              <CardContent className="flex-grow pt-4">
+                <Button 
+                  className={`w-full h-12 mb-8 font-bold rounded-xl ${
+                    plan.highlight 
+                      ? "bg-primary hover:bg-primary/90 text-white" 
+                      : "bg-white border border-primary text-primary hover:bg-primary/5 shadow-none"
+                  }`}
+                >
+                  Get Started
+                </Button>
                 <ul className="space-y-4">
                   {plan.features.map((feature, fidx) => (
-                    <li key={fidx} className="flex items-center gap-3 text-muted-foreground">
-                      <div className="bg-deploy-gradient/10 rounded-full p-1">
-                        <Check className="h-4 w-4 text-deploy-gradient" stroke="#0F766E" />
-                      </div>
+                    <li key={fidx} className="flex items-start gap-3 text-foreground text-sm font-medium">
+                      <Check className="h-5 w-5 text-green-500 shrink-0 mt-0.5" strokeWidth={3} />
                       <span>{feature}</span>
                     </li>
                   ))}
                 </ul>
               </CardContent>
-              <CardFooter className="pt-6">
-                <Button 
-                  variant={plan.highlight ? "default" : "outline"} 
-                  className={`w-full py-6 text-lg rounded-lg font-medium ${
-                    plan.highlight 
-                      ? "bg-accent hover:bg-accent/90 text-white" 
-                      : "border-accent text-accent hover:bg-accent/5"
-                  }`}
-                >
-                  Get Started
-                </Button>
+              <CardFooter className="pb-8 pt-4">
+                <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
+                  <Info className="h-3 w-3" /> See all features
+                </button>
               </CardFooter>
             </Card>
           ))}
