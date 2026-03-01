@@ -13,9 +13,16 @@ import { Footer } from "@/components/Footer";
 export const metadata: Metadata = {
   title: 'Hostxeon - Affordable Hosting Pakistan | High-Performance Web Hosting',
   description: 'Hostxeon offers the best affordable hosting in Pakistan with 99.9% uptime, NVMe SSD storage, and free migrations. Start your online journey today!',
+  keywords: ['Affordable Hosting Pakistan', 'Best Web Hosting', 'Shared Hosting Pakistan', 'VPS Hosting Pakistan'],
   alternates: {
     canonical: '/',
   },
+  openGraph: {
+    title: 'Hostxeon - Professional Web Hosting Solutions',
+    description: 'High-performance, secure, and affordable hosting infrastructure powered by WHMCS.',
+    url: 'https://hostxeon.com',
+    type: 'website',
+  }
 };
 
 export default function Home() {

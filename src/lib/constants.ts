@@ -1,8 +1,8 @@
 /**
  * Centralized constants for the Hostxeon application.
- * Update the WHMCS_URL to point to your actual installation (e.g., https://billing.hostxeon.com).
+ * Update the WHMCS_URL to point to your actual installation.
  */
-export const WHMCS_URL = "https://your-whmcs-url.com";
+export const WHMCS_URL = "https://billing.hostxeon.com"; // Change to your actual WHMCS URL
 
 export const WHMCS_LINKS = {
   CLIENT_AREA: `${WHMCS_URL}/clientarea.php`,
@@ -15,3 +15,6 @@ export const WHMCS_LINKS = {
   ANNOUNCEMENTS: `${WHMCS_URL}/announcements.php`,
   ORDER_PLAN: (pid: string) => `${WHMCS_URL}/cart.php?a=add&pid=${pid}`,
 };
+
+export const BRAND_NAME = "Hostxeon";
+export const SUPPORT_EMAIL = "support@hostxeon.com";

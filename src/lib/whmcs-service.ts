@@ -1,9 +1,8 @@
-
 'use server';
 
 /**
- * @fileOverview Server-side service for interacting with the WHMCS API.
- * This service handles authentication and requests to WHMCS without exposing credentials to the client.
+ * @fileOverview Secure server-side service for interacting with the WHMCS API.
+ * This service handles authentication and requests without exposing credentials.
  */
 
 const WHMCS_API_URL = process.env.WHMCS_API_URL || 'https://your-whmcs-url.com/includes/api.php';
@@ -26,6 +25,7 @@ async function callWhmcsApi(action: string, params: Record<string, any> = {}) {
         'Content-Type': 'application/x-www-form-urlencoded',
       },
       body: body.toString(),
+      cache: 'no-store', // Ensure fresh data for dashboard
     });
 
     if (!response.ok) {
@@ -44,14 +44,11 @@ async function callWhmcsApi(action: string, params: Record<string, any> = {}) {
   }
 }
 
-/**
- * Creates a new client in WHMCS.
- */
+/** Creates a new client in WHMCS. */
 export async function createWhmcsClient(userData: {
   firstname: string;
   lastname: string;
   email: string;
-  password?: string;
 }) {
   return callWhmcsApi('AddClient', {
     ...userData,
@@ -59,54 +56,28 @@ export async function createWhmcsClient(userData: {
   });
 }
 
-/**
- * Fetches products for a specific client.
- */
+/** Fetches products for a specific client. */
 export async function getClientProducts(clientId: string) {
   return callWhmcsApi('GetClientsProducts', { clientid: clientId });
 }
 
-/**
- * Fetches invoices for a specific client.
- */
+/** Fetches invoices for a specific client. */
 export async function getClientInvoices(clientId: string) {
   return callWhmcsApi('GetInvoices', { userid: clientId, limitnum: 50 });
 }
 
-/**
- * Fetches tickets for a specific client.
- */
+/** Fetches tickets for a specific client. */
 export async function getClientTickets(clientId: string) {
   return callWhmcsApi('GetTickets', { clientid: clientId });
 }
 
-/**
- * Fetches a single ticket with its messages.
- */
-export async function getTicketDetails(ticketId: string) {
-  return callWhmcsApi('GetTicket', { ticketid: ticketId });
-}
-
-/**
- * Opens a new support ticket.
- */
+/** Opens a new support ticket. */
 export async function openSupportTicket(clientId: string, subject: string, message: string, priority: string = 'Medium') {
   return callWhmcsApi('OpenTicket', {
     clientid: clientId,
     subject,
     message,
     priority,
-    deptid: 1, // Default department ID
-  });
-}
-
-/**
- * Adds a reply to an existing ticket.
- */
-export async function replyToTicket(ticketId: string, message: string, clientId: string) {
-  return callWhmcsApi('AddTicketReply', {
-    ticketid: ticketId,
-    clientid: clientId,
-    message,
+    deptid: 1,
   });
 }
