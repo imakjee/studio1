@@ -60,7 +60,7 @@ export function Navigation() {
             "text-2xl font-headline font-bold transition-colors",
             isScrolled ? "text-foreground" : "text-white"
           )}>
-            DeployHub
+            Hostxeon
           </span>
         </Link>
 

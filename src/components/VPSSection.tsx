@@ -1,3 +1,4 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -74,7 +75,7 @@ export function VPSSection() {
                 <div className="p-8 space-y-6 font-code text-sm">
                   <div className="flex gap-3">
                     <span className="text-primary font-bold">#</span>
-                    <span className="text-white/90">deploy-cli status --vps-01</span>
+                    <span className="text-white/90">hostxeon-cli status --vps-01</span>
                   </div>
                   
                   <div className="grid grid-cols-2 gap-4">

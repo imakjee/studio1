@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState } from "react";
@@ -67,7 +68,7 @@ export default function RegisterPage() {
           <div className="bg-accent rounded-2xl p-3 w-14 h-14 mx-auto mb-6 flex items-center justify-center shadow-lg">
             <Rocket className="h-8 w-8 text-black" />
           </div>
-          <CardTitle className="text-3xl font-bold">Join DeployHub</CardTitle>
+          <CardTitle className="text-3xl font-bold">Join Hostxeon</CardTitle>
           <CardDescription>Launch your professional website in minutes</CardDescription>
         </CardHeader>
         <CardContent className="px-10 pb-8">

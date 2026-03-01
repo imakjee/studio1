@@ -1,3 +1,4 @@
+
 "use client";
 
 import Image from "next/image";
@@ -13,14 +14,14 @@ export function Testimonials() {
     {
       name: "Sarah Johnson",
       role: "E-commerce Founder",
-      content: "Switching to DeployHub was the best decision for our store. Our load times dropped by 60% instantly and support has been incredible. Truly a game-changer.",
+      content: "Switching to Hostxeon was the best decision for our store. Our load times dropped by 60% instantly and support has been incredible. Truly a game-changer.",
       avatar: avatars[0]?.imageUrl,
       hint: avatars[0]?.imageHint
     },
     {
       name: "Michael Chen",
       role: "Lead Developer",
-      content: "The VPS control panel is light-years ahead of the competition. Deployment is seamless, and the performance is rock solid. No more late-night server issues.",
+      content: "The Hostxeon VPS control panel is light-years ahead of the competition. Deployment is seamless, and the performance is rock solid. No more late-night server issues.",
       avatar: avatars[1]?.imageUrl,
       hint: avatars[1]?.imageHint
     },
@@ -41,7 +42,7 @@ export function Testimonials() {
             Trusted by Thousands of Businesses
           </h2>
           <p className="text-white/70 text-lg max-w-2xl mx-auto">
-            See what our customers are saying about their journey with DeployHub.
+            See what our customers are saying about their journey with Hostxeon.
           </p>
         </div>
 
@@ -54,7 +55,7 @@ export function Testimonials() {
                 ))}
               </div>
               <p className="text-foreground text-xl md:text-2xl font-medium italic leading-relaxed mb-12">
-                "DeployHub provides the most stable and performant hosting we've ever used. The support team is incredibly knowledgeable and proactive. Highly recommended for any serious business."
+                "Hostxeon provides the most stable and performant hosting we've ever used. The support team is incredibly knowledgeable and proactive. Highly recommended for any serious business."
               </p>
               <div className="flex flex-col items-center gap-4">
                 <div className="relative w-20 h-20 rounded-full overflow-hidden border-4 border-accent shadow-xl">

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -37,7 +38,7 @@ export function Footer() {
               <div className="bg-accent rounded-lg p-1.5">
                 <Rocket className="h-6 w-6 text-black" />
               </div>
-              <span className="text-2xl font-headline font-bold">DeployHub</span>
+              <span className="text-2xl font-headline font-bold">Hostxeon</span>
             </Link>
             <p className="text-white/50 leading-relaxed max-w-sm">
               Premium web hosting infrastructure designed for modern businesses. Fast, secure, and infinitely scalable solutions for creators worldwide.
@@ -88,7 +89,7 @@ export function Footer() {
         </div>
 
         <div className="border-t border-white/5 pt-12 flex flex-col md:flex-row justify-between items-center gap-6 text-white/20 text-sm">
-          <p>© {year} DeployHub Inc. All rights reserved. Powered by AI.</p>
+          <p>© {year} Hostxeon Inc. All rights reserved. Powered by AI.</p>
           <div className="flex gap-8">
             <Link href="#" className="hover:text-white transition-colors">Status</Link>
             <Link href="#" className="hover:text-white transition-colors">Security</Link>

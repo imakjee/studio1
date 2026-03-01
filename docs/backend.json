@@ -1,3 +1,4 @@
+
 {
   "entities": {
     "UserProfile": {
@@ -51,7 +52,7 @@
       "$schema": "http://json-schema.org/draft-07/schema#",
       "title": "HostingPlan",
       "type": "object",
-      "description": "Defines the different hosting packages offered by DeployHub, including pricing and features.",
+      "description": "Defines the different hosting packages offered by Hostxeon, including pricing and features.",
       "properties": {
         "id": {
           "type": "string",
@@ -467,7 +468,7 @@
           "schema": {
             "$ref": "#/backend/entities/Order"
           },
-          "description": "Records customer orders for hosting plans. Each document includes a denormalized 'userId' field to ensure authorization independence and allow clients to query their own orders efficiently. Access is restricted to the order owner or administrators.",
+          "description": "Records customer orders for hosting services. Each document includes a denormalized 'userId' field to ensure authorization independence and allow clients to query their own orders efficiently. Access is restricted to the order owner or administrators.",
           "params": [
             {
               "name": "orderId",
@@ -548,7 +549,6 @@
           ]
         }
       }
-    ],
-    "reasoning": "The Firestore data structure is designed with a strong emphasis on authorization independence, enabling robust and debuggable security rules while supporting efficient querying (QAPs) for both clients and administrators. \n\n**Authorization Independence via Denormalization:**\n\n1.  **Top-Level Collections for User-Owned Data (`/orders`, `/invoices`, `/tickets`):** Instead of nesting all user-specific data under `/users/{userId}/...`, key entities like `Order`, `Invoice`, and `Ticket` are stored in top-level collections. Each document in these collections explicitly contains a `userId` field (the owner's Firebase UID). This denormalization is critical: \n    *   It removes the need for `get()` calls in security rules to ascertain ownership from a parent document, thus ensuring atomic operations and simplifying rule logic.\n    *   It allows for efficient querying for clients (e.g., `db.collection('orders').where('userId', '==', request.auth.uid)`) without sacrificing security.\n    *   It enables administrators to list and manage all orders, invoices, or tickets globally without having to iterate through all user subcollections.\n\n2.  **Subcollection Ownership Denormalization (`/invoices/{invoiceId}/lineItems`, `/tickets/{ticketId}/messages`):** For subcollections, the owner's ID (e.g., `invoiceOwnerId`, `ticketOwnerId`) is denormalized from the parent document into each subcollection document. This completely eliminates hierarchical authorization dependencies, allowing rules on `lineItems` or `messages` to directly check `resource.data.invoiceOwnerId == request.auth.uid` or `resource.data.ticketOwnerId == request.auth.uid` without a `get()` call to the parent `invoice` or `ticket` document.\n\n**QAPs (Rules are not Filters) Support:**\n\n*   **Client-side Listing:** For user-specific data (Orders, Invoices, Tickets), clients can perform direct queries like `db.collection('orders').where('userId', '==', currentUser.uid)`. The security rules will then ensure that `request.auth.uid == resource.data.userId` for every document returned, preventing data leakage and supporting QAPs.\n*   **Admin-side Listing:** Administrators, identified by their presence in the `/roles_admin` collection, have broad `list` access to top-level collections like `/orders`, `/invoices`, and `/tickets` directly. No `where` clause is required on `userId` for admin queries, as their role-based access rules grant full visibility.\n*   **Public Data:** The `/hostingPlans` collection is publicly readable, enabling direct listing for all users, including unauthenticated ones, supporting the landing page and plan selection features.\n\n**Structural Segregation and DBAC:**\n\n*   **Dedicated User Profiles (`/userProfiles/{userId}`):** User-specific details and their core `role` are stored here. This is the source of truth for user attributes.\n*   **Role-Based Access Control (`/roles_admin/{userId}`):** A dedicated, flat collection `/roles_admin` uses the 'Existence over Content' pattern. A document's existence at `/roles_admin/{request.auth.uid}` signifies admin privileges, making security rules concise and efficient (e.g., `get(/databases/$(database)/documents/roles_admin/$(request.auth.uid)) != null`). This avoids custom claims and ensures roles are database-driven.\n*   **Homogeneous Security Posture:** Each collection (`/hostingPlans`, `/orders`, etc.) is designed with a consistent security requirement across all its documents. For instance, all documents in `/hostingPlans` are publicly readable, while all documents in `/orders` require either owner or admin access. The `isInternalNote` field in `TicketMessage` is managed by rules to selectively hide content from clients while allowing admin access, adhering to the principle of controlling access at the rule level rather than mixing fundamentally different document types."
+    ]
   }
 }

@@ -1,11 +1,12 @@
+
 import type { Metadata } from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from '@/components/ui/toaster';
 
 export const metadata: Metadata = {
-  title: 'DeployHub - Modern Web Hosting',
-  description: 'Launch your website in minutes with high-performance hosting.',
+  title: 'Hostxeon - Modern Web Hosting',
+  description: 'Launch your website in minutes with high-performance hosting from Hostxeon.',
 };
 
 export default function RootLayout({
