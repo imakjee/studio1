@@ -7,14 +7,16 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
-import Link from "next/link";
+import { WHMCS_LINKS } from "@/lib/constants";
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
 
+  // Note: WHMCS PIDs (Product IDs) should match your WHMCS configuration
   const plans = [
     {
       id: "starter",
+      whmcsPid: "1", // Example WHMCS Product ID
       name: "Starter",
       desc: "Perfect for a small personal website",
       price: isYearly ? "1.99" : "3.99",
@@ -23,6 +25,7 @@ export function Pricing() {
     },
     {
       id: "business",
+      whmcsPid: "2", // Example WHMCS Product ID
       name: "Business",
       desc: "Best for growing business websites",
       price: isYearly ? "2.99" : "5.99",
@@ -32,6 +35,7 @@ export function Pricing() {
     },
     {
       id: "cloud-pro",
+      whmcsPid: "3", // Example WHMCS Product ID
       name: "Cloud Pro",
       desc: "Designed for high-traffic platforms",
       price: isYearly ? "6.99" : "12.99",
@@ -94,13 +98,13 @@ export function Pricing() {
               <CardContent className="flex-grow pt-4">
                 <Button 
                   asChild
-                  className={`w-full h-12 mb-8 font-bold rounded-xl ${
+                  className={`w-full h-14 mb-8 font-bold rounded-2xl text-lg ${
                     plan.highlight 
-                      ? "bg-primary hover:bg-primary/90 text-white" 
-                      : "bg-white border border-primary text-primary hover:bg-primary/5 shadow-none"
+                      ? "bg-primary hover:bg-primary/90 text-white shadow-xl shadow-primary/20" 
+                      : "bg-white border-2 border-primary text-primary hover:bg-primary/5 shadow-none"
                   }`}
                 >
-                  <Link href={`/checkout/${plan.id}`}>Get Started</Link>
+                  <a href={WHMCS_LINKS.ORDER_PLAN(plan.whmcsPid)}>Buy Now</a>
                 </Button>
                 <ul className="space-y-4">
                   {plan.features.map((feature, fidx) => (
@@ -112,9 +116,12 @@ export function Pricing() {
                 </ul>
               </CardContent>
               <CardFooter className="pb-8 pt-4">
-                <button className="text-primary text-xs font-bold flex items-center gap-1 hover:underline">
-                  <Info className="h-3 w-3" /> See all features
-                </button>
+                <a 
+                  href={WHMCS_LINKS.KNOWLEDGEBASE} 
+                  className="text-primary text-xs font-bold flex items-center gap-1 hover:underline"
+                >
+                  <Info className="h-3 w-3" /> Learn more in Knowledgebase
+                </a>
               </CardFooter>
             </Card>
           ))}
