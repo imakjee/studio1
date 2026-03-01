@@ -7,12 +7,14 @@ import { Card, CardContent, CardFooter, CardHeader, CardTitle } from "@/componen
 import { Badge } from "@/components/ui/badge";
 import { Switch } from "@/components/ui/switch";
 import { Label } from "@/components/ui/label";
+import Link from "next/link";
 
 export function Pricing() {
   const [isYearly, setIsYearly] = useState(true);
 
   const plans = [
     {
+      id: "starter",
       name: "Starter",
       desc: "Perfect for a small personal website",
       price: isYearly ? "1.99" : "3.99",
@@ -20,6 +22,7 @@ export function Pricing() {
       highlight: false,
     },
     {
+      id: "business",
       name: "Business",
       desc: "Best for growing business websites",
       price: isYearly ? "2.99" : "5.99",
@@ -28,6 +31,7 @@ export function Pricing() {
       badge: "Best Value",
     },
     {
+      id: "cloud-pro",
       name: "Cloud Pro",
       desc: "Designed for high-traffic platforms",
       price: isYearly ? "6.99" : "12.99",
@@ -89,13 +93,14 @@ export function Pricing() {
               </CardHeader>
               <CardContent className="flex-grow pt-4">
                 <Button 
+                  asChild
                   className={`w-full h-12 mb-8 font-bold rounded-xl ${
                     plan.highlight 
                       ? "bg-primary hover:bg-primary/90 text-white" 
                       : "bg-white border border-primary text-primary hover:bg-primary/5 shadow-none"
                   }`}
                 >
-                  Get Started
+                  <Link href={`/checkout/${plan.id}`}>Get Started</Link>
                 </Button>
                 <ul className="space-y-4">
                   {plan.features.map((feature, fidx) => (

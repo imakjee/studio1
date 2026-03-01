@@ -3,12 +3,26 @@
 import { useState, useEffect } from "react";
 import Link from "next/link";
 import { Button } from "@/components/ui/button";
-import { Menu, X, Rocket, User } from "lucide-react";
+import { Menu, X, Rocket, User, LogOut, LayoutDashboard, Settings } from "lucide-react";
 import { cn } from "@/lib/utils";
+import { useUser, useAuth } from "@/firebase";
+import { signOut } from "firebase/auth";
+import { useRouter } from "next/navigation";
+import { 
+  DropdownMenu, 
+  DropdownMenuContent, 
+  DropdownMenuItem, 
+  DropdownMenuLabel, 
+  DropdownMenuSeparator, 
+  DropdownMenuTrigger 
+} from "@/components/ui/dropdown-menu";
 
 export function Navigation() {
   const [isScrolled, setIsScrolled] = useState(false);
   const [isMobileMenuOpen, setIsMobileMenuOpen] = useState(false);
+  const { user, isUserLoading } = useUser();
+  const auth = useAuth();
+  const router = useRouter();
 
   useEffect(() => {
     const handleScroll = () => {
@@ -18,13 +32,16 @@ export function Navigation() {
     return () => window.removeEventListener("scroll", handleScroll);
   }, []);
 
+  const handleLogout = async () => {
+    await signOut(auth);
+    router.push("/");
+  };
+
   const menuItems = [
-    { name: "Hosting", href: "#" },
-    { name: "VPS", href: "#vps" },
-    { name: "WordPress", href: "#wordpress" },
-    { name: "Pricing", href: "#pricing" },
-    { name: "Blog", href: "#" },
-    { name: "Support", href: "#" },
+    { name: "Hosting", href: "/#features" },
+    { name: "VPS", href: "/#vps" },
+    { name: "WordPress", href: "/#wordpress" },
+    { name: "Pricing", href: "/#pricing" },
   ];
 
   return (
@@ -61,20 +78,56 @@ export function Navigation() {
               {item.name}
             </Link>
           ))}
+          
           <div className="flex items-center gap-4 ml-4">
-            <Link 
-              href="#" 
-              className={cn(
-                "text-sm font-medium flex items-center gap-2",
-                isScrolled ? "text-foreground" : "text-white"
-              )}
-            >
-              <User className="h-4 w-4" />
-              Log In
-            </Link>
-            <Button className="bg-accent hover:bg-accent/90 text-black font-bold rounded-lg px-6">
-              Get Started
-            </Button>
+            {!isUserLoading && (
+              user ? (
+                <DropdownMenu>
+                  <DropdownMenuTrigger asChild>
+                    <Button variant="ghost" className={cn("gap-2", isScrolled ? "text-foreground" : "text-white")}>
+                      <User className="h-4 w-4" />
+                      {user.email?.split('@')[0]}
+                    </Button>
+                  </DropdownMenuTrigger>
+                  <DropdownMenuContent align="end" className="w-56">
+                    <DropdownMenuLabel>My Account</DropdownMenuLabel>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard" className="cursor-pointer">
+                        <LayoutDashboard className="mr-2 h-4 w-4" />
+                        Dashboard
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuItem asChild>
+                      <Link href="/dashboard/tickets" className="cursor-pointer">
+                        <Settings className="mr-2 h-4 w-4" />
+                        Support Tickets
+                      </Link>
+                    </DropdownMenuItem>
+                    <DropdownMenuSeparator />
+                    <DropdownMenuItem onClick={handleLogout} className="text-destructive cursor-pointer">
+                      <LogOut className="mr-2 h-4 w-4" />
+                      Log Out
+                    </DropdownMenuItem>
+                  </DropdownMenuContent>
+                </DropdownMenu>
+              ) : (
+                <>
+                  <Link 
+                    href="/login" 
+                    className={cn(
+                      "text-sm font-medium flex items-center gap-2",
+                      isScrolled ? "text-foreground" : "text-white"
+                    )}
+                  >
+                    Log In
+                  </Link>
+                  <Button asChild className="bg-accent hover:bg-accent/90 text-black font-bold rounded-lg px-6">
+                    <Link href="/register">Get Started</Link>
+                  </Button>
+                </>
+              )
+            )}
           </div>
         </div>
 
@@ -104,9 +157,15 @@ export function Navigation() {
               {item.name}
             </Link>
           ))}
-          <Button className="bg-accent hover:bg-accent/90 text-black font-bold w-full py-6 text-lg">
-            Get Started
-          </Button>
+          {user ? (
+            <Button asChild className="bg-primary text-white font-bold w-full py-6 text-lg">
+              <Link href="/dashboard" onClick={() => setIsMobileMenuOpen(false)}>Dashboard</Link>
+            </Button>
+          ) : (
+            <Button asChild className="bg-accent hover:bg-accent/90 text-black font-bold w-full py-6 text-lg">
+              <Link href="/register" onClick={() => setIsMobileMenuOpen(false)}>Get Started</Link>
+            </Button>
+          )}
         </div>
       )}
     </nav>
