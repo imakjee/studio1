@@ -1,13 +1,10 @@
 "use client";
 
-import Image from "next/image";
 import { Button } from "@/components/ui/button";
-import { CheckCircle2, Zap, Layout, Globe, Search } from "lucide-react";
-import { PlaceHolderImages } from "@/lib/placeholder-images";
+import { Zap, Layout, Globe, Search } from "lucide-react";
+import Link from "next/link";
 
 export function WordPressSection() {
-  const wpImage = PlaceHolderImages.find(img => img.id === "wordpress-hosting");
-  
   const benefits = [
     { text: "Automatic 1-click install", icon: <Zap className="h-4 w-4" /> },
     { text: "Staging environments", icon: <Layout className="h-4 w-4" /> },
@@ -83,8 +80,8 @@ export function WordPressSection() {
             </div>
 
             <div className="flex items-center gap-4">
-              <Button className="bg-primary hover:bg-primary/90 text-white font-bold h-14 px-10 text-lg rounded-xl shadow-xl shadow-primary/20">
-                Get Started Now
+              <Button asChild className="bg-primary hover:bg-primary/90 text-white font-bold h-14 px-10 text-lg rounded-xl shadow-xl shadow-primary/20">
+                <Link href="/wordpress">Get Started Now</Link>
               </Button>
               <div className="text-muted-foreground text-xs">
                 Starting from <br />

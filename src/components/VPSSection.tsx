@@ -1,8 +1,10 @@
 "use client";
 
 import { Button } from "@/components/ui/button";
-import { Server, Settings, Terminal, Shield, Cpu, Activity } from "lucide-react";
+import { Terminal, Shield, Activity } from "lucide-react";
 import { cn } from "@/lib/utils";
+import Link from "next/link";
+import { Badge } from "@/components/ui/badge";
 
 export function VPSSection() {
   return (
@@ -13,7 +15,7 @@ export function VPSSection() {
       <div className="max-w-7xl mx-auto px-6 relative z-10">
         <div className="grid lg:grid-cols-2 gap-20 items-center">
           <div>
-            <Badge className="bg-primary/20 text-primary border border-primary/30 mb-6">High Performance VPS</Badge>
+            <Badge className="bg-primary/20 text-primary border border-primary/30 mb-6 font-bold uppercase tracking-widest text-[10px]">High Performance VPS</Badge>
             <h2 className="text-4xl md:text-6xl font-headline font-bold mb-8 leading-tight">
               Virtual Private Servers <br />
               <span className="text-primary">Built for Power Users</span>
@@ -45,8 +47,8 @@ export function VPSSection() {
             </div>
 
             <div className="flex flex-wrap gap-4 items-center">
-              <Button size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold rounded-xl h-14 px-10 text-lg">
-                Explore VPS Plans
+              <Button asChild size="lg" className="bg-primary hover:bg-primary/90 text-white font-bold rounded-xl h-14 px-10 text-lg">
+                <Link href="/vps">Explore VPS Plans</Link>
               </Button>
               <div className="text-white/50 text-sm flex items-center gap-2 px-4">
                 Starting at <span className="text-white font-bold text-lg">$12.00</span> /mo
@@ -111,13 +113,5 @@ export function VPSSection() {
         </div>
       </div>
     </section>
-  );
-}
-
-function Badge({ children, className }: { children: React.ReactNode; className?: string }) {
-  return (
-    <span className={cn("px-4 py-1.5 text-[10px] font-black uppercase tracking-[0.2em] rounded-full", className)}>
-      {children}
-    </span>
   );
 }

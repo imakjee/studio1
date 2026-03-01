@@ -4,11 +4,11 @@ import { useState, useEffect } from "react";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Textarea } from "@/components/ui/textarea";
-import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
-import { Sparkles, Loader2, CheckCircle, Globe, Layout, Palette, Code } from "lucide-react";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Sparkles, Loader2, CheckCircle, Globe, Layout, Palette } from "lucide-react";
 import { generateAiWebsiteConcept, AiWebsiteConceptGeneratorOutput } from "@/ai/flows/ai-website-concept-generator";
 import { Badge } from "@/components/ui/badge";
-import Image from "next/image";
+import Link from "next/link";
 
 export function AiWebsiteTool() {
   const [businessType, setBusinessType] = useState("");
@@ -17,9 +17,10 @@ export function AiWebsiteTool() {
   const [result, setResult] = useState<AiWebsiteConceptGeneratorOutput | null>(null);
   const [randomId, setRandomId] = useState<number | null>(null);
 
-  // Use useEffect to generate random ID to avoid hydration mismatch errors
   useEffect(() => {
-    setRandomId(Math.floor(Math.random() * 9000) + 1000);
+    if (result) {
+      setRandomId(Math.floor(Math.random() * 9000) + 1000);
+    }
   }, [result]);
 
   const handleGenerate = async () => {
@@ -175,8 +176,8 @@ export function AiWebsiteTool() {
                       </div>
                     </div>
                     
-                    <Button className="w-full bg-[#0F172A] hover:bg-black text-white h-14 rounded-2xl font-bold text-lg">
-                      Start Building This Site
+                    <Button asChild className="w-full bg-[#0F172A] hover:bg-black text-white h-14 rounded-2xl font-bold text-lg">
+                      <Link href="/register">Start Building This Site</Link>
                     </Button>
                   </CardContent>
                 </Card>
