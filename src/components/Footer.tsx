@@ -1,4 +1,3 @@
-
 "use client";
 
 import Link from "next/link";
@@ -60,7 +59,7 @@ export function Footer() {
               <li><Link href="/vps" className="hover:text-accent transition-colors">VPS Hosting</Link></li>
               <li><Link href="/wordpress" className="hover:text-accent transition-colors">WordPress Hosting</Link></li>
               <li><Link href="/dedicated" className="hover:text-accent transition-colors">Dedicated Servers</Link></li>
-              <li><Link href="/hosting" className="hover:text-accent transition-colors">Cloud Hosting</Link></li>
+              <li><Link href="/cloud" className="hover:text-accent transition-colors">Cloud Hosting</Link></li>
             </ul>
           </div>
 

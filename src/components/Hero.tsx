@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -12,7 +11,7 @@ export function Hero() {
     { name: "Shared Hosting", icon: <LayoutGrid className="h-5 w-5" />, href: "/hosting" },
     { name: "WP Hosting", icon: <Zap className="h-5 w-5" />, href: "/wordpress" },
     { name: "VPS Hosting", icon: <Server className="h-5 w-5" />, href: "/vps" },
-    { name: "Cloud Hosting", icon: <Cloud className="h-5 w-5" />, href: "/hosting" },
+    { name: "Cloud Hosting", icon: <Cloud className="h-5 w-5" />, href: "/cloud" },
     { name: "Dedicated", icon: <Search className="h-5 w-5" />, href: "/dedicated" },
     { name: "Email Hosting", icon: <Mail className="h-5 w-5" />, href: "/hosting" },
   ];
