@@ -1,18 +1,20 @@
+
 "use client";
 
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
 import { Shield, Headphones, RefreshCcw, Search, LayoutGrid, Globe, Cloud, Zap, Server, Mail } from "lucide-react";
 import { WHMCS_LINKS } from "@/lib/constants";
+import Link from "next/link";
 
 export function Hero() {
   const categories = [
-    { name: "Shared Hosting", icon: <LayoutGrid className="h-5 w-5" /> },
-    { name: "Website Builder", icon: <Globe className="h-5 w-5" /> },
-    { name: "Cloud Hosting", icon: <Cloud className="h-5 w-5" /> },
-    { name: "WordPress Hosting", icon: <Zap className="h-5 w-5" /> },
-    { name: "VPS Hosting", icon: <Server className="h-5 w-5" /> },
-    { name: "Email Hosting", icon: <Mail className="h-5 w-5" /> },
+    { name: "Shared Hosting", icon: <LayoutGrid className="h-5 w-5" />, href: "/hosting" },
+    { name: "WP Hosting", icon: <Zap className="h-5 w-5" />, href: "/wordpress" },
+    { name: "VPS Hosting", icon: <Server className="h-5 w-5" />, href: "/vps" },
+    { name: "Cloud Hosting", icon: <Cloud className="h-5 w-5" />, href: "/hosting" },
+    { name: "Dedicated", icon: <Search className="h-5 w-5" />, href: "/dedicated" },
+    { name: "Email Hosting", icon: <Mail className="h-5 w-5" />, href: "/hosting" },
   ];
 
   return (
@@ -73,16 +75,16 @@ export function Hero() {
         {/* Categories Grid */}
         <div className="grid grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4 max-w-6xl mx-auto mt-20">
           {categories.map((cat, idx) => (
-            <a 
+            <Link 
               key={idx} 
-              href={WHMCS_LINKS.CART}
+              href={cat.href}
               className="flex flex-col items-center gap-3 p-6 bg-white/5 border border-white/10 rounded-2xl hover:bg-white/10 hover:border-accent/50 transition-all group"
             >
               <div className="bg-white/10 p-3 rounded-xl group-hover:bg-accent group-hover:text-black transition-colors text-white">
                 {cat.icon}
               </div>
               <span className="text-sm font-semibold text-white/80">{cat.name}</span>
-            </a>
+            </Link>
           ))}
         </div>
       </div>

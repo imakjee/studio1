@@ -1,3 +1,4 @@
+
 "use client";
 
 import { useState, useEffect } from "react";
@@ -23,12 +24,13 @@ export function Navigation() {
 
   const menuItems = [
     { name: "Web Hosting", href: "/hosting", icon: <LayoutGrid className="h-4 w-4" /> },
+    { name: "WP Hosting", href: "/wordpress", icon: <Zap className="h-4 w-4" /> },
     { name: "VPS Hosting", href: "/vps", icon: <Server className="h-4 w-4" /> },
-    { name: "Dedicated Servers", href: "/dedicated", icon: <Cpu className="h-4 w-4" /> },
-    { name: "Pricing", href: "/#pricing", icon: <Zap className="h-4 w-4" /> },
+    { name: "Dedicated", href: "/dedicated", icon: <Cpu className="h-4 w-4" /> },
+    { name: "About", href: "/about", icon: <Rocket className="h-4 w-4" /> },
   ];
 
-  const isDarkNav = pathname === "/" || pathname === "/vps" || pathname === "/dedicated";
+  const isDarkNav = pathname === "/" || pathname === "/vps" || pathname === "/dedicated" || pathname === "/about";
 
   return (
     <nav
@@ -51,7 +53,7 @@ export function Navigation() {
         </Link>
 
         {/* Desktop Menu */}
-        <div className="hidden lg:flex items-center gap-8">
+        <div className="hidden lg:flex items-center gap-6">
           {menuItems.map((item) => (
             <Link
               key={item.name}
@@ -74,7 +76,7 @@ export function Navigation() {
               )}
             >
               <LogIn className="h-4 w-4" />
-              Client Login
+              Login
             </a>
             <Button asChild className="bg-accent hover:bg-accent/90 text-black font-bold rounded-xl px-6 shadow-lg shadow-accent/20 border-none transition-transform hover:scale-105 active:scale-95">
               <a href={WHMCS_LINKS.CLIENT_AREA}>Client Area</a>

@@ -1,3 +1,4 @@
+
 "use client";
 
 import Link from "next/link";
@@ -54,21 +55,21 @@ export function Footer() {
           {/* Column 2 */}
           <div>
             <h4 className="font-bold text-lg mb-8">Hosting</h4>
-            <ul className="space-y-4 text-white/40">
-              <li><a href={WHMCS_LINKS.CART} className="hover:text-accent transition-colors">Shared Hosting</a></li>
-              <li><Link href="#vps" className="hover:text-accent transition-colors">VPS Hosting</Link></li>
-              <li><Link href="#wordpress" className="hover:text-accent transition-colors">WordPress Hosting</Link></li>
-              <li><a href={WHMCS_LINKS.CART} className="hover:text-accent transition-colors">Cloud Hosting</a></li>
-              <li><a href={WHMCS_LINKS.CART} className="hover:text-accent transition-colors">Email Hosting</a></li>
+            <ul className="space-y-4 text-white/40 text-sm">
+              <li><Link href="/hosting" className="hover:text-accent transition-colors">Shared Hosting</Link></li>
+              <li><Link href="/vps" className="hover:text-accent transition-colors">VPS Hosting</Link></li>
+              <li><Link href="/wordpress" className="hover:text-accent transition-colors">WordPress Hosting</Link></li>
+              <li><Link href="/dedicated" className="hover:text-accent transition-colors">Dedicated Servers</Link></li>
+              <li><Link href="/hosting" className="hover:text-accent transition-colors">Cloud Hosting</Link></li>
             </ul>
           </div>
 
           {/* Column 3 */}
           <div>
             <h4 className="font-bold text-lg mb-8">Company</h4>
-            <ul className="space-y-4 text-white/40">
-              <li><Link href="#" className="hover:text-accent transition-colors">About Us</Link></li>
-              <li><Link href="#pricing" className="hover:text-accent transition-colors">Pricing</Link></li>
+            <ul className="space-y-4 text-white/40 text-sm">
+              <li><Link href="/about" className="hover:text-accent transition-colors">About Us</Link></li>
+              <li><Link href="/#pricing" className="hover:text-accent transition-colors">Pricing</Link></li>
               <li><a href={WHMCS_LINKS.ANNOUNCEMENTS} className="hover:text-accent transition-colors">Company Blog</a></li>
               <li><a href={WHMCS_LINKS.SUPPORT_TICKETS} className="hover:text-accent transition-colors">Contact Support</a></li>
               <li><a href={WHMCS_LINKS.CLIENT_AREA} className="hover:text-accent transition-colors">Affiliate Program</a></li>
@@ -78,7 +79,7 @@ export function Footer() {
           {/* Column 4 */}
           <div>
             <h4 className="font-bold text-lg mb-8">Client Resources</h4>
-            <ul className="space-y-4 text-white/40">
+            <ul className="space-y-4 text-white/40 text-sm">
               <li><a href={WHMCS_LINKS.KNOWLEDGEBASE} className="hover:text-accent transition-colors">Knowledgebase</a></li>
               <li><a href={WHMCS_LINKS.CLIENT_AREA} className="hover:text-accent transition-colors">Client Portal</a></li>
               <li><a href={WHMCS_LINKS.SUPPORT_TICKETS} className="hover:text-accent transition-colors">Submit Ticket</a></li>
