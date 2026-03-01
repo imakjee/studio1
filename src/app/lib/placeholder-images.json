@@ -1,0 +1,29 @@
+
+{
+  "placeholderImages": [
+    {
+      "id": "wordpress-hosting",
+      "description": "Premium WordPress hosting illustration",
+      "imageUrl": "https://images.unsplash.com/photo-1658203897415-3cad6cfad5c0?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw1fHx3b3JkcHJlc3MlMjBob3N0aW5nfGVufDB8fHx8MTc3MjQwMTU5OHww&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "wordpress hosting"
+    },
+    {
+      "id": "avatar-1",
+      "description": "User testimonial avatar 1",
+      "imageUrl": "https://images.unsplash.com/photo-1681218034100-801ebcbc0221?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw5fHxwb3J0cmFpdCUyMHBlcnNvbnxlbnwwfHx8fDE3NzIzODEwMDJ8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "portrait person"
+    },
+    {
+      "id": "avatar-2",
+      "description": "User testimonial avatar 2",
+      "imageUrl": "https://images.unsplash.com/photo-1552699611-e2c208d5d9cf?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHwxMHx8cG9ydHJhaXQlMjB3b21hbnxlbnwwfHx8fDE3NzIzNzI5Mzd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "portrait woman"
+    },
+    {
+      "id": "avatar-3",
+      "description": "User testimonial avatar 3",
+      "imageUrl": "https://images.unsplash.com/photo-1583195763986-0231686dcd43?crop=entropy&cs=tinysrgb&fit=max&fm=jpg&ixid=M3w3NDE5ODJ8MHwxfHNlYXJjaHw3fHxwb3J0cmFpdCUyMG1hbnxlbnwwfHx8fDE3NzI0MDE1OTd8MA&ixlib=rb-4.1.0&q=80&w=1080",
+      "imageHint": "portrait man"
+    }
+  ]
+}
