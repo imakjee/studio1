@@ -1,5 +1,4 @@
-"use client";
-
+import { Metadata } from 'next';
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Cpu, Server, Shield, Network, Zap, Settings, Check } from "lucide-react";
@@ -7,6 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WHMCS_LINKS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: 'Dedicated Server Pakistan - Bare Metal Performance',
+  description: 'Enterprise-grade dedicated servers in Pakistan. 100% dedicated hardware, Intel Xeon/AMD EPYC processors, and high-speed NVMe storage.',
+};
 
 export default function DedicatedPage() {
   const dedicatedPlans = [
@@ -59,8 +64,8 @@ export default function DedicatedPage() {
         <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
           <Badge className="bg-primary/20 text-primary border border-primary/30 mb-6 font-bold uppercase tracking-widest text-[10px]">Bare Metal Servers</Badge>
           <h1 className="text-4xl md:text-7xl font-headline font-bold mb-8">
-            Ultimate Power <br />
-            <span className="text-primary">Dedicated Bare Metal</span>
+            Dedicated <br />
+            <span className="text-primary">Server Pakistan</span>
           </h1>
           <p className="text-white/60 text-lg md:text-xl max-w-3xl mx-auto">
             Zero virtualization overhead. 100% hardware power. 
@@ -124,38 +129,7 @@ export default function DedicatedPage() {
         </div>
       </section>
 
-      {/* Enterprise Specs */}
-      <section className="py-24 border-t border-white/5">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="flex gap-6">
-              <div className="bg-primary/10 h-12 w-12 rounded-2xl flex items-center justify-center text-primary shrink-0"><Shield className="h-6 w-6" /></div>
-              <div>
-                <h4 className="text-xl font-bold mb-2">Hardware RAID</h4>
-                <p className="text-white/40">Enhanced data protection and performance with physical RAID controllers on all enterprise builds.</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="bg-primary/10 h-12 w-12 rounded-2xl flex items-center justify-center text-primary shrink-0"><Settings className="h-6 w-6" /></div>
-              <div>
-                <h4 className="text-xl font-bold mb-2">Full IPMI Control</h4>
-                <p className="text-white/40">Complete out-of-band management. Reinstall, reboot, and monitor your server via remote console.</p>
-              </div>
-            </div>
-            <div className="flex gap-6">
-              <div className="bg-primary/10 h-12 w-12 rounded-2xl flex items-center justify-center text-primary shrink-0"><Network className="h-6 w-6" /></div>
-              <div>
-                <h4 className="text-xl font-bold mb-2">Private Networking</h4>
-                <p className="text-white/40">Connect multiple servers via a private LAN for backend database and application traffic.</p>
-              </div>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Footer />
     </div>
   );
 }
-
-import { cn } from "@/lib/utils";

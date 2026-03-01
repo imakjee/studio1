@@ -1,5 +1,4 @@
-"use client";
-
+import { Metadata } from 'next';
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Server, Cpu, Activity, Shield, Zap, Terminal, Check } from "lucide-react";
@@ -7,6 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WHMCS_LINKS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: 'VPS Hosting Pakistan - High-Performance Cloud VPS Servers',
+  description: 'Scalable and high-performance VPS hosting in Pakistan. Get full root access, NVMe SSD storage, and 99.9% uptime on our cloud infrastructure.',
+};
 
 export default function VPSPage() {
   const vpsPlans = [
@@ -44,8 +49,8 @@ export default function VPSPage() {
         <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
           <Badge className="bg-accent/20 text-accent border border-accent/30 mb-6 font-bold uppercase tracking-widest text-[10px]">Cloud Infrastructure</Badge>
           <h1 className="text-4xl md:text-7xl font-headline font-bold mb-8">
-            High Performance <br />
-            <span className="text-accent">Scalable VPS Hosting</span>
+            Scalable <br />
+            <span className="text-accent">VPS Hosting Pakistan</span>
           </h1>
           <p className="text-white/70 text-lg md:text-xl max-w-3xl mx-auto mb-12">
             Isolated resources, full root control, and lightning-fast deployment. 
@@ -98,41 +103,7 @@ export default function VPSPage() {
         </div>
       </section>
 
-      {/* Spec Comparison */}
-      <section className="py-24 bg-black/40">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-headline font-bold mb-6">Built for Reliability</h2>
-            <p className="text-white/50 text-lg">Every VPS instance includes enterprise hardware and monitoring.</p>
-          </div>
-          <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-8">
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/5">
-              <Terminal className="h-8 w-8 text-accent mb-6" />
-              <h4 className="font-bold text-lg mb-2">Instant Deployment</h4>
-              <p className="text-white/40 text-sm">Your server is online within seconds of purchase completion.</p>
-            </div>
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/5">
-              <Activity className="h-8 w-8 text-accent mb-6" />
-              <h4 className="font-bold text-lg mb-2">99.9% Uptime</h4>
-              <p className="text-white/40 text-sm">Reliability backed by our SLA and redundant network infrastructure.</p>
-            </div>
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/5">
-              <Zap className="h-8 w-8 text-accent mb-6" />
-              <h4 className="font-bold text-lg mb-2">DDoS Protection</h4>
-              <p className="text-white/40 text-sm">Advanced mitigation system to keep your services protected from attacks.</p>
-            </div>
-            <div className="p-8 bg-white/5 rounded-3xl border border-white/5">
-              <Shield className="h-8 w-8 text-accent mb-6" />
-              <h4 className="font-bold text-lg mb-2">OS Flexibility</h4>
-              <p className="text-white/40 text-sm">Choose from Ubuntu, CentOS, Debian, or even custom ISOs.</p>
-            </div>
-          </div>
-        </div>
-      </section>
-
       <Footer />
     </div>
   );
 }
-
-import { cn } from "@/lib/utils";

@@ -1,5 +1,4 @@
-"use client";
-
+import { Metadata } from 'next';
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Check, Zap, Shield, Globe, HardDrive, Clock } from "lucide-react";
@@ -7,6 +6,12 @@ import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
 import { WHMCS_LINKS } from "@/lib/constants";
+import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: 'Shared Hosting Pakistan - Fast & Reliable Web Hosting',
+  description: 'Get high-speed shared hosting in Pakistan starting at $1.99/mo. Optimized for performance with cPanel, free SSL, and NVMe storage.',
+};
 
 export default function HostingPage() {
   const plans = [
@@ -44,7 +49,7 @@ export default function HostingPage() {
           <Badge className="bg-primary/10 text-primary border-none mb-6 font-bold uppercase tracking-widest text-[10px]">Web Hosting</Badge>
           <h1 className="text-4xl md:text-6xl font-headline font-bold text-foreground mb-8">
             Lightning Fast <br />
-            <span className="text-primary">Shared Web Hosting</span>
+            <span className="text-primary">Shared Hosting Pakistan</span>
           </h1>
           <p className="text-muted-foreground text-lg max-w-2xl mx-auto mb-12">
             Experience peak performance with our optimized NVMe-powered hosting stack. 
@@ -130,5 +135,3 @@ export default function HostingPage() {
     </div>
   );
 }
-
-import { cn } from "@/lib/utils";

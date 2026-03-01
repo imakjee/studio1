@@ -1,11 +1,46 @@
-import type { Metadata } from 'next';
+import type { Metadata, Viewport } from 'next';
 import './globals.css';
 import { FirebaseClientProvider } from '@/firebase';
 import { Toaster } from '@/components/ui/toaster';
 
+export const viewport: Viewport = {
+  themeColor: '#18490D',
+  width: 'device-width',
+  initialScale: 1,
+};
+
 export const metadata: Metadata = {
-  title: 'Hostxeon - Modern Web Hosting',
-  description: 'Launch your website in minutes with high-performance hosting from Hostxeon.',
+  title: {
+    default: 'Hostxeon - Affordable Hosting Pakistan | High-Performance Web Hosting',
+    template: '%s | Hostxeon Hosting'
+  },
+  description: 'Launch your website with Hostxeon, the most affordable hosting in Pakistan. Get high-speed NVMe SSD storage, free SSL, and 24/7 expert support.',
+  keywords: ['Affordable Hosting Pakistan', 'Best Web Hosting', 'Shared Hosting Pakistan', 'VPS Hosting Pakistan', 'WordPress Hosting', 'Dedicated Servers'],
+  authors: [{ name: 'Hostxeon Team' }],
+  creator: 'Hostxeon',
+  publisher: 'Hostxeon Inc.',
+  formatDetection: {
+    email: false,
+    address: false,
+    telephone: false,
+  },
+  metadataBase: new URL('https://hostxeon.com'),
+  alternates: {
+    canonical: '/',
+  },
+  openGraph: {
+    title: 'Hostxeon - Professional Web Hosting Solutions',
+    description: 'High-performance, secure, and affordable hosting infrastructure powered by WHMCS.',
+    url: 'https://hostxeon.com',
+    siteName: 'Hostxeon',
+    locale: 'en_US',
+    type: 'website',
+  },
+  twitter: {
+    card: 'summary_large_image',
+    title: 'Hostxeon - Web Hosting Pakistan',
+    description: 'The fastest hosting infrastructure in Pakistan.',
+  },
 };
 
 export default function RootLayout({

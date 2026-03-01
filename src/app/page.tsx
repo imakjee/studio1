@@ -1,4 +1,4 @@
-
+import { Metadata } from 'next';
 import { Navigation } from "@/components/Navigation";
 import { Hero } from "@/components/Hero";
 import { Features } from "@/components/Features";
@@ -9,6 +9,14 @@ import { AiWebsiteTool } from "@/components/AiWebsiteTool";
 import { Testimonials } from "@/components/Testimonials";
 import { FAQ } from "@/components/FAQ";
 import { Footer } from "@/components/Footer";
+
+export const metadata: Metadata = {
+  title: 'Hostxeon - Affordable Hosting Pakistan | High-Performance Web Hosting',
+  description: 'Hostxeon offers the best affordable hosting in Pakistan with 99.9% uptime, NVMe SSD storage, and free migrations. Start your online journey today!',
+  alternates: {
+    canonical: '/',
+  },
+};
 
 export default function Home() {
   return (

@@ -1,11 +1,14 @@
-
-"use client";
-
+import { Metadata } from 'next';
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
-import { Rocket, Shield, Headphones, Globe, Heart, Award, Users } from "lucide-react";
+import { Rocket, Shield, Headphones, Award, Users } from "lucide-react";
 import { Badge } from "@/components/ui/badge";
 import Image from "next/image";
+
+export const metadata: Metadata = {
+  title: 'About Hostxeon - Leading Web Hosting Provider in Pakistan',
+  description: 'Learn about Hostxeon\'s mission to provide the world\'s most stable and performant hosting infrastructure in Pakistan and globally.',
+};
 
 export default function AboutPage() {
   return (
@@ -60,45 +63,12 @@ export default function AboutPage() {
             <div className="relative rounded-[40px] overflow-hidden shadow-2xl">
               <Image 
                 src="https://images.unsplash.com/photo-1551434678-e076c223a692?q=80&w=1000&auto=format&fit=crop" 
-                alt="Our Office" 
+                alt="Hostxeon office workspace providing technical support" 
                 width={1000} 
                 height={800} 
                 className="object-cover"
                 data-ai-hint="office workspace"
               />
-            </div>
-          </div>
-        </div>
-      </section>
-
-      {/* Values */}
-      <section className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="text-center mb-16">
-            <h2 className="text-3xl md:text-5xl font-headline font-bold mb-6">Our Core Values</h2>
-            <p className="text-muted-foreground text-lg">The principles that drive every decision at Hostxeon.</p>
-          </div>
-          <div className="grid md:grid-cols-3 gap-12">
-            <div className="text-center space-y-4">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center shadow-sm mx-auto text-primary">
-                <Rocket className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-bold">Innovation First</h4>
-              <p className="text-muted-foreground">We constantly update our stack to leverage the latest in cloud technology.</p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center shadow-sm mx-auto text-primary">
-                <Shield className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-bold">Security obsessed</h4>
-              <p className="text-muted-foreground">Your data integrity is our highest priority, protected by multi-layer encryption.</p>
-            </div>
-            <div className="text-center space-y-4">
-              <div className="bg-white w-16 h-16 rounded-full flex items-center justify-center shadow-sm mx-auto text-primary">
-                <Headphones className="h-8 w-8" />
-              </div>
-              <h4 className="text-xl font-bold">Human Support</h4>
-              <p className="text-muted-foreground">No bots. Real experts available 24/7 to solve your hosting challenges.</p>
             </div>
           </div>
         </div>

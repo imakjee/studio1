@@ -1,6 +1,4 @@
-
-"use client";
-
+import { Metadata } from 'next';
 import { Navigation } from "@/components/Navigation";
 import { Footer } from "@/components/Footer";
 import { Check, Zap, Layout, Globe, Search, Shield, Clock, HardDrive } from "lucide-react";
@@ -9,6 +7,11 @@ import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/com
 import { Badge } from "@/components/ui/badge";
 import { WHMCS_LINKS } from "@/lib/constants";
 import { cn } from "@/lib/utils";
+
+export const metadata: Metadata = {
+  title: 'WordPress Hosting Pakistan - Managed & Optimized WP Hosting',
+  description: 'Fastest WordPress hosting in Pakistan. Managed solutions with automatic updates, expert WP support, and optimized caching for peak performance.',
+};
 
 export default function WordPressPage() {
   const wpPlans = [
@@ -46,8 +49,8 @@ export default function WordPressPage() {
         <div className="max-w-7xl mx-auto px-6 text-center relative z-10">
           <Badge className="bg-primary/10 text-primary border-none mb-6 font-bold uppercase tracking-widest text-[10px]">Managed Solutions</Badge>
           <h1 className="text-4xl md:text-7xl font-headline font-bold mb-8">
-            Superior Managed <br />
-            <span className="text-primary">WordPress Hosting</span>
+            Optimized <br />
+            <span className="text-primary">WordPress Hosting Pakistan</span>
           </h1>
           <p className="text-muted-foreground text-lg md:text-xl max-w-3xl mx-auto mb-12">
             Focus on your content, let us handle the performance. Our WordPress-optimized stack delivers peak speeds and iron-clad security out of the box.
@@ -99,34 +102,6 @@ export default function WordPressPage() {
               </CardContent>
             </Card>
           ))}
-        </div>
-      </section>
-
-      {/* Benefits */}
-      <section className="py-24 bg-slate-50">
-        <div className="max-w-7xl mx-auto px-6">
-          <div className="grid md:grid-cols-4 gap-8">
-            <div className="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-              <Zap className="h-8 w-8 text-primary mb-6" />
-              <h4 className="font-bold text-lg mb-2">LiteSpeed Cache</h4>
-              <p className="text-muted-foreground text-sm">Pre-configured server-side caching for 5x faster load times.</p>
-            </div>
-            <div className="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-              <Shield className="h-8 w-8 text-primary mb-6" />
-              <h4 className="font-bold text-lg mb-2">WP Firewall</h4>
-              <p className="text-muted-foreground text-sm">Advanced security rules to block WordPress-specific threats.</p>
-            </div>
-            <div className="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-              <Clock className="h-8 w-8 text-primary mb-6" />
-              <h4 className="font-bold text-lg mb-2">Auto Updates</h4>
-              <p className="text-muted-foreground text-sm">We keep your WP core and plugins secure and updated.</p>
-            </div>
-            <div className="p-8 bg-white rounded-3xl shadow-sm border border-slate-100">
-              <Layout className="h-8 w-8 text-primary mb-6" />
-              <h4 className="font-bold text-lg mb-2">Staging Tool</h4>
-              <p className="text-muted-foreground text-sm">Test changes in a safe sandbox before going live.</p>
-            </div>
-          </div>
         </div>
       </section>
 
