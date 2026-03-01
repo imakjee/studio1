@@ -1,0 +1,554 @@
+{
+  "entities": {
+    "UserProfile": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "UserProfile",
+      "type": "object",
+      "description": "Represents a user of the application, storing additional profile information beyond basic authentication details. Linked to Firebase Authentication via its ID.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the UserProfile entity. This typically corresponds to the Firebase Authentication User ID (UID)."
+        },
+        "email": {
+          "type": "string",
+          "description": "The user's email address.",
+          "format": "email"
+        },
+        "firstName": {
+          "type": "string",
+          "description": "The first name of the user."
+        },
+        "lastName": {
+          "type": "string",
+          "description": "The last name of the user."
+        },
+        "role": {
+          "type": "string",
+          "description": "The role of the user within the application, defining access permissions (e.g., 'client', 'admin')."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the user profile was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "email",
+        "firstName",
+        "lastName",
+        "role",
+        "createdAt"
+      ]
+    },
+    "HostingPlan": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "HostingPlan",
+      "type": "object",
+      "description": "Defines the different hosting packages offered by DeployHub, including pricing and features.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the HostingPlan entity."
+        },
+        "name": {
+          "type": "string",
+          "description": "The name of the hosting plan (e.g., 'Basic', 'Standard', 'Premium')."
+        },
+        "description": {
+          "type": "string",
+          "description": "A brief description of the hosting plan."
+        },
+        "price": {
+          "type": "number",
+          "description": "The price of the hosting plan per billing cycle (e.g., monthly)."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency code for the plan's price (e.g., 'USD')."
+        },
+        "features": {
+          "type": "array",
+          "description": "A list of key features included in this hosting plan.",
+          "items": {
+            "type": "string"
+          }
+        },
+        "isMostPopular": {
+          "type": "boolean",
+          "description": "A flag indicating if this plan is designated as 'Most Popular' for marketing purposes."
+        },
+        "isActive": {
+          "type": "boolean",
+          "description": "A flag indicating if the hosting plan is currently active and available for purchase."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the hosting plan was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the hosting plan was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "name",
+        "price",
+        "currency",
+        "features",
+        "isActive",
+        "createdAt"
+      ]
+    },
+    "Order": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Order",
+      "type": "object",
+      "description": "Represents a customer's purchase or subscription to a specific hosting plan.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Order entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile who placed the order. (Relationship: UserProfile 1:N Order)"
+        },
+        "planId": {
+          "type": "string",
+          "description": "Reference to the HostingPlan that was ordered. (Relationship: HostingPlan 1:N Order)"
+        },
+        "startDate": {
+          "type": "string",
+          "description": "The date and time when the hosting service for this order started.",
+          "format": "date-time"
+        },
+        "endDate": {
+          "type": "string",
+          "description": "The expected date and time when the hosting service for this order will end, if applicable (e.g., for subscriptions).",
+          "format": "date-time"
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the order (e.g., 'pending', 'active', 'suspended', 'cancelled', 'completed')."
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total monetary amount for this specific order."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency code for the total amount (e.g., 'USD')."
+        },
+        "paymentMethod": {
+          "type": "string",
+          "description": "A description or identifier of the payment method used for this order (e.g., 'Stripe', 'PayPal')."
+        },
+        "transactionId": {
+          "type": "string",
+          "description": "The external transaction ID provided by the payment gateway."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the order was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the order was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "planId",
+        "startDate",
+        "status",
+        "totalAmount",
+        "currency",
+        "createdAt"
+      ]
+    },
+    "Invoice": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Invoice",
+      "type": "object",
+      "description": "Records a billing invoice generated for a user's services or orders.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Invoice entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile to whom the invoice is issued. (Relationship: UserProfile 1:N Invoice)"
+        },
+        "orderId": {
+          "type": "string",
+          "description": "Reference to the Order associated with this invoice, if applicable. (Relationship: Order 1:N Invoice)"
+        },
+        "invoiceNumber": {
+          "type": "string",
+          "description": "A unique, human-readable invoice number."
+        },
+        "issueDate": {
+          "type": "string",
+          "description": "The date when the invoice was issued.",
+          "format": "date"
+        },
+        "dueDate": {
+          "type": "string",
+          "description": "The date by which the invoice payment is due.",
+          "format": "date"
+        },
+        "totalAmount": {
+          "type": "number",
+          "description": "The total monetary amount of the invoice."
+        },
+        "currency": {
+          "type": "string",
+          "description": "The currency code for the invoice's total amount (e.g., 'USD')."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current payment status of the invoice (e.g., 'pending', 'paid', 'overdue', 'void')."
+        },
+        "paymentDate": {
+          "type": "string",
+          "description": "The date and time when the invoice was paid.",
+          "format": "date-time"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the invoice record was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the invoice record was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "invoiceNumber",
+        "issueDate",
+        "dueDate",
+        "totalAmount",
+        "currency",
+        "status",
+        "createdAt"
+      ]
+    },
+    "InvoiceLineItem": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "InvoiceLineItem",
+      "type": "object",
+      "description": "Represents a single line item detail within an invoice, specifying what was billed.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the InvoiceLineItem entity."
+        },
+        "invoiceId": {
+          "type": "string",
+          "description": "Reference to the Invoice this line item belongs to. (Relationship: Invoice 1:N InvoiceLineItem)"
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the service or product billed (e.g., 'Basic Hosting Plan - Monthly Subscription')."
+        },
+        "quantity": {
+          "type": "number",
+          "description": "The quantity of the item being billed."
+        },
+        "unitPrice": {
+          "type": "number",
+          "description": "The price per unit of the item."
+        },
+        "total": {
+          "type": "number",
+          "description": "The total amount for this specific line item (quantity * unitPrice)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the invoice line item was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the invoice line item was last updated.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "invoiceId",
+        "description",
+        "quantity",
+        "unitPrice",
+        "total",
+        "createdAt"
+      ]
+    },
+    "Ticket": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "Ticket",
+      "type": "object",
+      "description": "Represents a customer support ticket submitted by a user.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the Ticket entity."
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile who submitted this ticket. (Relationship: UserProfile 1:N Ticket)"
+        },
+        "subject": {
+          "type": "string",
+          "description": "The subject line or brief summary of the support request."
+        },
+        "description": {
+          "type": "string",
+          "description": "A detailed description of the issue or request."
+        },
+        "status": {
+          "type": "string",
+          "description": "The current status of the ticket (e.g., 'open', 'in_progress', 'closed', 'awaiting_response')."
+        },
+        "priority": {
+          "type": "string",
+          "description": "The priority level of the ticket (e.g., 'low', 'medium', 'high', 'urgent')."
+        },
+        "assignedToUserId": {
+          "type": "string",
+          "description": "Reference to the UserProfile (admin) who is currently assigned to resolve this ticket, if any. (Relationship: UserProfile 0:1 Ticket)"
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the support ticket was created.",
+          "format": "date-time"
+        },
+        "updatedAt": {
+          "type": "string",
+          "description": "Timestamp when the support ticket was last updated.",
+          "format": "date-time"
+        },
+        "closedAt": {
+          "type": "string",
+          "description": "Timestamp when the support ticket was closed.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "userId",
+        "subject",
+        "description",
+        "status",
+        "priority",
+        "createdAt"
+      ]
+    },
+    "TicketMessage": {
+      "$schema": "http://json-schema.org/draft-07/schema#",
+      "title": "TicketMessage",
+      "type": "object",
+      "description": "Represents a single message or reply within a support ticket, allowing for conversation history.",
+      "properties": {
+        "id": {
+          "type": "string",
+          "description": "Unique identifier for the TicketMessage entity."
+        },
+        "ticketId": {
+          "type": "string",
+          "description": "Reference to the Ticket this message belongs to. (Relationship: Ticket 1:N TicketMessage)"
+        },
+        "userId": {
+          "type": "string",
+          "description": "Reference to the UserProfile who sent this message. (Relationship: UserProfile 1:N TicketMessage)"
+        },
+        "content": {
+          "type": "string",
+          "description": "The actual text content of the message."
+        },
+        "isInternalNote": {
+          "type": "boolean",
+          "description": "A flag indicating if this message is an internal note (true) visible only to staff, or a message to/from the client (false)."
+        },
+        "createdAt": {
+          "type": "string",
+          "description": "Timestamp when the message was sent.",
+          "format": "date-time"
+        }
+      },
+      "required": [
+        "id",
+        "ticketId",
+        "userId",
+        "content",
+        "isInternalNote",
+        "createdAt"
+      ]
+    }
+  },
+  "auth": {
+    "providers": [
+      "password",
+      "anonymous"
+    ]
+  },
+  "firestore": {
+    "structure": [
+      {
+        "path": "/userProfiles/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "Stores individual user profile information. Access is restricted to the owner (matching userId) and administrators. The 'role' field stored here is fundamental for application-level access control.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Authentication UID of the user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/roles_admin/{userId}",
+        "definition": {
+          "entityName": "UserProfile",
+          "schema": {
+            "$ref": "#/backend/entities/UserProfile"
+          },
+          "description": "A collection used to identify administrator users via 'Existence over Content'. The document ID is the userId of an admin. While conceptually an 'AdminRole', it references UserProfile due to the strong association and lack of a dedicated 'AdminRole' schema. Security rules will check for the existence of a document at this path to grant admin privileges.",
+          "params": [
+            {
+              "name": "userId",
+              "description": "The unique Firebase Authentication UID of the administrator user."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/hostingPlans/{planId}",
+        "definition": {
+          "entityName": "HostingPlan",
+          "schema": {
+            "$ref": "#/backend/entities/HostingPlan"
+          },
+          "description": "Contains details of all available hosting plans. Publicly readable for all users. Only administrators have permission to create, update, or delete plans.",
+          "params": [
+            {
+              "name": "planId",
+              "description": "The unique identifier for a hosting plan."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/orders/{orderId}",
+        "definition": {
+          "entityName": "Order",
+          "schema": {
+            "$ref": "#/backend/entities/Order"
+          },
+          "description": "Records customer orders for hosting plans. Each document includes a denormalized 'userId' field to ensure authorization independence and allow clients to query their own orders efficiently. Access is restricted to the order owner or administrators.",
+          "params": [
+            {
+              "name": "orderId",
+              "description": "The unique identifier for an order."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/invoices/{invoiceId}",
+        "definition": {
+          "entityName": "Invoice",
+          "schema": {
+            "$ref": "#/backend/entities/Invoice"
+          },
+          "description": "Stores billing invoices issued to users. Each document includes a denormalized 'userId' field for authorization independence. Clients can only read their own invoices, while administrators can view all.",
+          "params": [
+            {
+              "name": "invoiceId",
+              "description": "The unique identifier for an invoice."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/invoices/{invoiceId}/lineItems/{lineItemId}",
+        "definition": {
+          "entityName": "InvoiceLineItem",
+          "schema": {
+            "$ref": "#/backend/entities/InvoiceLineItem"
+          },
+          "description": "Details individual line items within an invoice. Each document includes a denormalized 'invoiceOwnerId' (from the parent Invoice's userId) for authorization independence, eliminating `get()` calls in rules. Read access is granted to the invoice owner and administrators.",
+          "params": [
+            {
+              "name": "invoiceId",
+              "description": "The unique identifier of the parent invoice."
+            },
+            {
+              "name": "lineItemId",
+              "description": "The unique identifier for an invoice line item."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/tickets/{ticketId}",
+        "definition": {
+          "entityName": "Ticket",
+          "schema": {
+            "$ref": "#/backend/entities/Ticket"
+          },
+          "description": "Manages customer support tickets. Each document includes a denormalized 'userId' field (the ticket creator) for authorization independence. Access is granted to the ticket owner and administrators for reading and updating.",
+          "params": [
+            {
+              "name": "ticketId",
+              "description": "The unique identifier for a support ticket."
+            }
+          ]
+        }
+      },
+      {
+        "path": "/tickets/{ticketId}/messages/{messageId}",
+        "definition": {
+          "entityName": "TicketMessage",
+          "schema": {
+            "$ref": "#/backend/entities/TicketMessage"
+          },
+          "description": "Contains messages exchanged within a support ticket. Each document includes denormalized 'ticketOwnerId' (from the parent Ticket's userId) for authorization independence, and 'messageSenderId'. Clients can only read messages where 'isInternalNote' is false and are restricted to their own tickets. Administrators have full read/write access and can post internal notes.",
+          "params": [
+            {
+              "name": "ticketId",
+              "description": "The unique identifier of the parent support ticket."
+            },
+            {
+              "name": "messageId",
+              "description": "The unique identifier for a message within a ticket."
+            }
+          ]
+        }
+      }
+    ],
+    "reasoning": "The Firestore data structure is designed with a strong emphasis on authorization independence, enabling robust and debuggable security rules while supporting efficient querying (QAPs) for both clients and administrators. \n\n**Authorization Independence via Denormalization:**\n\n1.  **Top-Level Collections for User-Owned Data (`/orders`, `/invoices`, `/tickets`):** Instead of nesting all user-specific data under `/users/{userId}/...`, key entities like `Order`, `Invoice`, and `Ticket` are stored in top-level collections. Each document in these collections explicitly contains a `userId` field (the owner's Firebase UID). This denormalization is critical: \n    *   It removes the need for `get()` calls in security rules to ascertain ownership from a parent document, thus ensuring atomic operations and simplifying rule logic.\n    *   It allows for efficient querying for clients (e.g., `db.collection('orders').where('userId', '==', request.auth.uid)`) without sacrificing security.\n    *   It enables administrators to list and manage all orders, invoices, or tickets globally without having to iterate through all user subcollections.\n\n2.  **Subcollection Ownership Denormalization (`/invoices/{invoiceId}/lineItems`, `/tickets/{ticketId}/messages`):** For subcollections, the owner's ID (e.g., `invoiceOwnerId`, `ticketOwnerId`) is denormalized from the parent document into each subcollection document. This completely eliminates hierarchical authorization dependencies, allowing rules on `lineItems` or `messages` to directly check `resource.data.invoiceOwnerId == request.auth.uid` or `resource.data.ticketOwnerId == request.auth.uid` without a `get()` call to the parent `invoice` or `ticket` document.\n\n**QAPs (Rules are not Filters) Support:**\n\n*   **Client-side Listing:** For user-specific data (Orders, Invoices, Tickets), clients can perform direct queries like `db.collection('orders').where('userId', '==', currentUser.uid)`. The security rules will then ensure that `request.auth.uid == resource.data.userId` for every document returned, preventing data leakage and supporting QAPs.\n*   **Admin-side Listing:** Administrators, identified by their presence in the `/roles_admin` collection, have broad `list` access to top-level collections like `/orders`, `/invoices`, and `/tickets` directly. No `where` clause is required on `userId` for admin queries, as their role-based access rules grant full visibility.\n*   **Public Data:** The `/hostingPlans` collection is publicly readable, enabling direct listing for all users, including unauthenticated ones, supporting the landing page and plan selection features.\n\n**Structural Segregation and DBAC:**\n\n*   **Dedicated User Profiles (`/userProfiles/{userId}`):** User-specific details and their core `role` are stored here. This is the source of truth for user attributes.\n*   **Role-Based Access Control (`/roles_admin/{userId}`):** A dedicated, flat collection `/roles_admin` uses the 'Existence over Content' pattern. A document's existence at `/roles_admin/{request.auth.uid}` signifies admin privileges, making security rules concise and efficient (e.g., `get(/databases/$(database)/documents/roles_admin/$(request.auth.uid)) != null`). This avoids custom claims and ensures roles are database-driven.\n*   **Homogeneous Security Posture:** Each collection (`/hostingPlans`, `/orders`, etc.) is designed with a consistent security requirement across all its documents. For instance, all documents in `/hostingPlans` are publicly readable, while all documents in `/orders` require either owner or admin access. The `isInternalNote` field in `TicketMessage` is managed by rules to selectively hide content from clients while allowing admin access, adhering to the principle of controlling access at the rule level rather than mixing fundamentally different document types."
+  }
+}

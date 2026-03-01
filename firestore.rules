@@ -1,0 +1,158 @@
+rules_version = '2';
+service cloud.firestore {
+  match /databases/{database}/documents {
+
+    /**
+     * DEPLOYHUB HOSTING SECURITY MODEL
+     *
+     * Core Philosophy:
+     * This ruleset implements a hybrid security model tailored for a professional hosting provider. 
+     * It combines strict User-Ownership for client data (Orders, Invoices, Tickets) with 
+     * Role-Based Access Control (RBAC) via a dedicated administrative collection.
+     *
+     * Data Structure:
+     * - Public Data: Hosting plans are globally readable.
+     * - Private Data: User profiles, orders, invoices, and tickets are stored in top-level 
+     *   collections, each containing a denormalized 'userId' field for efficient authorization.
+     * - Administrative Data: A flat '/roles_admin' collection identifies staff members.
+     *
+     * Key Security Decisions:
+     * 1. Denormalization for Performance: Every user-owned document contains the owner's 
+     *    UID (e.g., 'userId', 'invoiceOwnerId'). This allows rules to verify ownership 
+     *    without performing expensive 'get()' calls to parent documents.
+     * 2. Administrative Override: Administrators (verified via '/roles_admin') have 
+     *    unrestricted access to manage hosting plans, orders, and support tickets.
+     * 3. Support Privacy: Support tickets include 'isInternalNote' flags. Clients can 
+     *    only see messages where this flag is false, while admins see everything.
+     * 4. Relational Integrity: On document creation, the rules enforce that the 
+     *    internal 'userId' field matches the authenticated user's ID.
+     */
+
+    // --- Helper Functions ---
+
+    /** @description Checks if the request is from an authenticated user. */
+    function isSignedIn() {
+      return request.auth != null;
+    }
+
+    /** @description Checks if the authenticated user's UID matches the provided userId. */
+    function isOwner(userId) {
+      return isSignedIn() && request.auth.uid == userId;
+    }
+
+    /** @description Verifies ownership of an existing document. */
+    function isExistingOwner(userId) {
+      return resource != null && isOwner(userId);
+    }
+
+    /** @description Checks if the authenticated user is an administrator via the 'roles_admin' collection. */
+    function isAdmin() {
+      return isSignedIn() && exists(/databases/$(database)/documents/roles_admin/$(request.auth.uid));
+    }
+
+    // --- Collection Rules ---
+
+    /**
+     * @description Rules for user profiles. Users can manage their own profile; admins can see all.
+     * @path /userProfiles/{userId}
+     * @allow (get) Authenticated user 'user_123' reading /userProfiles/user_123.
+     * @deny (create) User 'user_123' trying to create a profile with ID 'user_456'.
+     * @principle Ownership-based access with self-creation validation.
+     */
+    match /userProfiles/{userId} {
+      allow get, list: if isOwner(userId) || isAdmin();
+      allow create: if isOwner(userId) && request.resource.data.id == userId;
+      allow update: if (isExistingOwner(userId) || isAdmin()) && request.resource.data.id == resource.data.id;
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Identifies administrative users. Document existence grants admin privileges.
+     * @path /roles_admin/{userId}
+     * @allow (get) Admin user 'admin_99' checking their own role status.
+     * @deny (create) Regular user 'user_123' trying to make themselves an admin.
+     * @principle Existence-based RBAC (Existence over Content).
+     */
+    match /roles_admin/{userId} {
+      allow read: if isSignedIn();
+      allow write: if isAdmin();
+    }
+
+    /**
+     * @description Publicly available hosting plans. Managed only by admins.
+     * @path /hostingPlans/{planId}
+     * @allow (list) An unauthenticated visitor browsing available plans.
+     * @deny (update) A client user attempting to change the price of a plan.
+     * @principle Public read with restricted administrative writes.
+     */
+    match /hostingPlans/{planId} {
+      allow get, list: if true;
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Customer orders for hosting services. Scoped to owner and admins.
+     * @path /orders/{orderId}
+     * @allow (create) User 'user_1' creating an order with 'userId' set to 'user_1'.
+     * @deny (list) User 'user_1' attempting to list orders belonging to 'user_2'.
+     * @principle Denormalized ownership check for top-level collections.
+     */
+    match /orders/{orderId} {
+      allow get, list: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if (isExistingOwner(resource.data.userId) || isAdmin()) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Billing invoices. System-generated; clients have read-only access to their own.
+     * @path /invoices/{invoiceId}
+     * @allow (get) User 'user_1' viewing their monthly hosting invoice.
+     * @deny (create) User 'user_1' trying to manually create an invoice record.
+     * @principle System-managed data with owner-read access.
+     */
+    match /invoices/{invoiceId} {
+      allow get, list: if isOwner(resource.data.userId) || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Line items for invoices. Inherits ownership from the parent invoice owner ID.
+     * @path /invoices/{invoiceId}/lineItems/{lineItemId}
+     * @allow (list) User 'user_1' listing line items for their own invoice.
+     * @deny (update) User 'user_1' attempting to modify a line item total.
+     * @principle Subcollection access via denormalized owner ID.
+     */
+    match /invoices/{invoiceId}/lineItems/{lineItemId} {
+      allow get, list: if isOwner(resource.data.invoiceOwnerId) || isAdmin();
+      allow create, update, delete: if isAdmin();
+    }
+
+    /**
+     * @description Support tickets. Created and viewed by owners; managed by admins.
+     * @path /tickets/{ticketId}
+     * @allow (create) User 'user_1' opening a new support ticket.
+     * @deny (delete) User 'user_1' attempting to delete their own ticket history.
+     * @principle Owner-write (create/update) with admin-only deletion.
+     */
+    match /tickets/{ticketId} {
+      allow get, list: if isOwner(resource.data.userId) || isAdmin();
+      allow create: if isSignedIn() && request.resource.data.userId == request.auth.uid;
+      allow update: if (isExistingOwner(resource.data.userId) || isAdmin()) && request.resource.data.userId == resource.data.userId;
+      allow delete: if isAdmin();
+    }
+
+    /**
+     * @description Conversation messages within a ticket. Supports private staff notes.
+     * @path /tickets/{ticketId}/messages/{messageId}
+     * @allow (get) Client 'user_1' viewing a reply from support.
+     * @deny (get) Client 'user_1' trying to read an internal staff note (isInternalNote: true).
+     * @principle Field-level visibility control based on user roles.
+     */
+    match /tickets/{ticketId}/messages/{messageId} {
+      allow get, list: if (isOwner(resource.data.ticketOwnerId) && resource.data.isInternalNote == false) || isAdmin();
+      allow create: if (isOwner(request.resource.data.ticketOwnerId) && request.resource.data.isInternalNote == false) || isAdmin();
+      allow update, delete: if isAdmin();
+    }
+  }
+}
