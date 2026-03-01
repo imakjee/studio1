@@ -1,4 +1,3 @@
-
 "use client";
 
 import { Button } from "@/components/ui/button";
@@ -20,7 +19,7 @@ export function VPSSection() {
               <span className="text-primary">Built for Power Users</span>
             </h2>
             <p className="text-white/70 text-lg mb-12 leading-relaxed max-w-xl">
-              Take full control of your infrastructure with our enterprise-grade VPS. 
+              Take full control of your infrastructure with Hostxeon's enterprise-grade VPS. 
               Deploy instantly with pre-installed OS templates and full root access.
             </p>
             

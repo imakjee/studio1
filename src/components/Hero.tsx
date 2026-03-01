@@ -32,7 +32,7 @@ export function Hero() {
         </h1>
         
         <p className="text-white/70 text-lg md:text-xl max-w-3xl mx-auto mb-12">
-          Experience high-performance hosting powered by cutting-edge technology. Join 500,000+ happy customers who trust us with their online presence.
+          Experience high-performance hosting powered by cutting-edge technology. Join 500,000+ happy customers who trust Hostxeon with their online presence.
         </p>
 
         <div className="max-w-3xl mx-auto mb-16">
