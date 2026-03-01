@@ -1,40 +1,81 @@
+
 "use client";
 
-import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
-import { collection, query, where } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
+import { doc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Badge } from "@/components/ui/badge";
-import { Rocket, Package, CreditCard, LifeBuoy, ArrowRight, Zap, Shield, Globe } from "lucide-react";
+import { Package, CreditCard, LifeBuoy, ArrowRight, Zap, Shield, Globe, Loader2 } from "lucide-react";
 import { Button } from "@/components/ui/button";
 import Link from "next/link";
+import { getClientProducts, getClientInvoices, getClientTickets } from "@/lib/whmcs-service";
 
 export default function DashboardPage() {
   const { user } = useUser();
   const db = useFirestore();
+  const [stats, setStats] = useState({
+    products: 0,
+    invoices: 0,
+    tickets: 0,
+  });
+  const [loading, setLoading] = useState(true);
+  const [whmcsProducts, setWhmcsProducts] = useState<any[]>([]);
 
-  // Query user orders
-  const ordersQuery = useMemoFirebase(() => {
+  const profileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
-    return query(collection(db, "orders"), where("userId", "==", user.uid));
+    return doc(db, "userProfiles", user.uid);
   }, [db, user]);
 
-  const { data: orders, isLoading: isOrdersLoading } = useCollection(ordersQuery);
+  const { data: profile } = useDoc(profileRef);
 
-  const stats = [
-    { name: "Active Services", value: orders?.filter(o => o.status === 'active').length || 0, icon: <Package className="h-6 w-6" />, color: "bg-blue-500" },
-    { name: "Open Tickets", value: 0, icon: <LifeBuoy className="h-6 w-6" />, color: "bg-amber-500" },
-    { name: "Unpaid Invoices", value: 0, icon: <CreditCard className="h-6 w-6" />, color: "bg-rose-500" },
+  useEffect(() => {
+    async function fetchWhmcsData() {
+      if (!profile?.whmcsClientId) return;
+      
+      setLoading(true);
+      try {
+        const [productsRes, invoicesRes, ticketsRes] = await Promise.all([
+          getClientProducts(profile.whmcsClientId),
+          getClientInvoices(profile.whmcsClientId),
+          getClientTickets(profile.whmcsClientId),
+        ]);
+
+        setStats({
+          products: productsRes.totalresults || 0,
+          invoices: (invoicesRes.invoices?.invoice || []).filter((i: any) => i.status === 'Unpaid').length,
+          tickets: (ticketsRes.tickets?.ticket || []).filter((t: any) => t.status === 'Open').length,
+        });
+
+        setWhmcsProducts(productsRes.products?.product || []);
+      } catch (error) {
+        console.error("Dashboard fetch error:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+
+    if (profile) fetchWhmcsData();
+  }, [profile]);
+
+  const statCards = [
+    { name: "Active Services", value: stats.products, icon: <Package className="h-6 w-6" />, color: "bg-blue-500" },
+    { name: "Open Tickets", value: stats.tickets, icon: <LifeBuoy className="h-6 w-6" />, color: "bg-amber-500" },
+    { name: "Unpaid Invoices", value: stats.invoices, icon: <CreditCard className="h-6 w-6" />, color: "bg-rose-500" },
   ];
 
   return (
     <div className="space-y-10">
-      <div>
-        <h1 className="text-3xl font-black font-headline mb-2">Welcome back, {user?.email?.split('@')[0]}!</h1>
-        <p className="text-muted-foreground">Manage your infrastructure and services from one central dashboard.</p>
+      <div className="flex justify-between items-end">
+        <div>
+          <h1 className="text-3xl font-black font-headline mb-2">Welcome back, {profile?.firstName || 'User'}!</h1>
+          <p className="text-muted-foreground">Manage your Hostxeon infrastructure and services.</p>
+        </div>
+        {loading && <Loader2 className="h-6 w-6 animate-spin text-primary" />}
       </div>
 
       <div className="grid md:grid-cols-3 gap-6">
-        {stats.map((stat) => (
+        {statCards.map((stat) => (
           <Card key={stat.name} className="border-none shadow-sm rounded-3xl overflow-hidden">
             <CardContent className="p-8 flex items-center gap-6">
               <div className={`${stat.color} p-4 rounded-2xl text-white shadow-lg`}>
@@ -63,31 +104,31 @@ export default function DashboardPage() {
             </div>
           </CardHeader>
           <CardContent className="p-8 pt-4">
-            {orders && orders.length > 0 ? (
+            {whmcsProducts.length > 0 ? (
               <div className="space-y-4">
-                {orders.map((order) => (
-                  <div key={order.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
+                {whmcsProducts.slice(0, 3).map((product: any) => (
+                  <div key={product.id} className="flex items-center justify-between p-4 bg-slate-50 rounded-2xl border border-slate-100">
                     <div className="flex items-center gap-4">
                       <div className="bg-white p-2 rounded-lg shadow-sm">
                         <Zap className="h-5 w-5 text-primary" />
                       </div>
                       <div>
-                        <p className="font-bold">Hosting Plan Order</p>
-                        <p className="text-xs text-muted-foreground">ID: {order.id.substring(0, 8)}</p>
+                        <p className="font-bold">{product.name}</p>
+                        <p className="text-xs text-muted-foreground">{product.domain}</p>
                       </div>
                     </div>
-                    <Badge className={order.status === 'active' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}>
-                      {order.status.toUpperCase()}
+                    <Badge className={product.status === 'Active' ? 'bg-green-100 text-green-700 border-none' : 'bg-amber-100 text-amber-700 border-none'}>
+                      {product.status.toUpperCase()}
                     </Badge>
                   </div>
                 ))}
               </div>
             ) : (
               <div className="text-center py-12 bg-slate-50 rounded-3xl border-2 border-dashed border-slate-200">
-                <Rocket className="h-12 w-12 text-slate-300 mx-auto mb-4" />
+                <Package className="h-12 w-12 text-slate-300 mx-auto mb-4" />
                 <p className="font-bold text-slate-400">No active services found</p>
                 <Button asChild variant="link" className="text-primary font-bold mt-2">
-                  <Link href="/#pricing">Browse Hosting Plans</Link>
+                  <Link href="/hosting">Order Hosting</Link>
                 </Button>
               </div>
             )}
@@ -96,16 +137,16 @@ export default function DashboardPage() {
 
         <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
           <CardHeader className="p-8 pb-4">
-            <CardTitle className="text-xl font-bold">Recommended for You</CardTitle>
-            <CardDescription>Enhance your online presence</CardDescription>
+            <CardTitle className="text-xl font-bold">Account Health</CardTitle>
+            <CardDescription>Infrastructure & Security</CardDescription>
           </CardHeader>
           <CardContent className="p-8 pt-4 space-y-4">
             <div className="group p-5 bg-deploy-dark rounded-2xl text-white flex items-center justify-between cursor-pointer hover:scale-[1.02] transition-transform">
               <div className="flex items-center gap-4">
                 <Shield className="h-8 w-8 text-accent" />
                 <div>
-                  <p className="font-bold">Enterprise Security</p>
-                  <p className="text-xs text-white/50">Protect your site from DDoS</p>
+                  <p className="font-bold">DDoS Protection</p>
+                  <p className="text-xs text-white/50">Always-on mitigation active</p>
                 </div>
               </div>
               <ArrowRight className="h-5 w-5 text-accent" />
@@ -114,8 +155,8 @@ export default function DashboardPage() {
               <div className="flex items-center gap-4">
                 <Globe className="h-8 w-8 text-primary" />
                 <div>
-                  <p className="font-bold text-slate-800">Domain Privacy</p>
-                  <p className="text-xs text-muted-foreground">Keep your details private</p>
+                  <p className="font-bold text-slate-800">Global DNS</p>
+                  <p className="text-xs text-muted-foreground">Optimized edge routing</p>
                 </div>
               </div>
               <ArrowRight className="h-5 w-5 text-primary" />

@@ -1,27 +1,48 @@
+
 "use client";
 
-import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
-import { collection, query, where, orderBy } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
+import { doc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Table, TableBody, TableCell, TableHead, TableHeader, TableRow } from "@/components/ui/table";
 import { Badge } from "@/components/ui/badge";
-import { CreditCard, Download, Loader2, DollarSign } from "lucide-react";
+import { CreditCard, Download, Loader2, DollarSign, ExternalLink } from "lucide-react";
 import { Button } from "@/components/ui/button";
+import { getClientInvoices } from "@/lib/whmcs-service";
+import { WHMCS_URL } from "@/lib/constants";
 
 export default function BillingPage() {
   const { user } = useUser();
   const db = useFirestore();
+  const [invoices, setInvoices] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
 
-  const invoicesQuery = useMemoFirebase(() => {
+  const profileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
-    return query(
-      collection(db, "invoices"),
-      where("userId", "==", user.uid),
-      orderBy("issueDate", "desc")
-    );
+    return doc(db, "userProfiles", user.uid);
   }, [db, user]);
 
-  const { data: invoices, isLoading } = useCollection(invoicesQuery);
+  const { data: profile } = useDoc(profileRef);
+
+  useEffect(() => {
+    async function fetchInvoices() {
+      if (!profile?.whmcsClientId) return;
+      try {
+        const res = await getClientInvoices(profile.whmcsClientId);
+        setInvoices(res.invoices?.invoice || []);
+      } catch (error) {
+        console.error("Failed to fetch invoices:", error);
+      } finally {
+        setLoading(false);
+      }
+    }
+    if (profile) fetchInvoices();
+  }, [profile]);
+
+  const unpaidTotal = invoices
+    .filter(i => i.status === 'Unpaid')
+    .reduce((acc, curr) => acc + parseFloat(curr.total), 0);
 
   return (
     <div className="space-y-10">
@@ -37,16 +58,16 @@ export default function BillingPage() {
               <div className="bg-white/20 p-3 rounded-2xl">
                 <CreditCard className="h-8 w-8 text-white" />
               </div>
-              <Badge className="bg-white/20 text-white border-none">ACTIVE</Badge>
+              <Badge className="bg-white/20 text-white border-none font-bold">WHMCS ACCOUNT</Badge>
             </div>
-            <p className="text-sm font-bold opacity-70 uppercase tracking-widest mb-1">Account Balance</p>
-            <p className="text-4xl font-black mb-8">$0.00</p>
+            <p className="text-sm font-bold opacity-70 uppercase tracking-widest mb-1">Total Unpaid</p>
+            <p className="text-4xl font-black mb-8">${unpaidTotal.toFixed(2)}</p>
             <div className="flex gap-4">
-              <Button variant="secondary" className="bg-white text-primary font-bold rounded-xl h-12 px-6">
-                Add Funds
+              <Button asChild variant="secondary" className="bg-white text-primary font-bold rounded-xl h-12 px-6">
+                <a href={`${WHMCS_URL}/clientarea.php?action=addfunds`}>Add Funds</a>
               </Button>
-              <Button variant="ghost" className="text-white hover:bg-white/10 font-bold rounded-xl h-12 px-6">
-                Payment Methods
+              <Button asChild variant="ghost" className="text-white hover:bg-white/10 font-bold rounded-xl h-12 px-6">
+                <a href={`${WHMCS_URL}/clientarea.php?action=details`}>Payment Methods</a>
               </Button>
             </div>
           </CardContent>
@@ -54,8 +75,8 @@ export default function BillingPage() {
 
         <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
           <CardHeader className="p-8 pb-4">
-            <CardTitle className="text-xl font-bold">Upcoming Charges</CardTitle>
-            <CardDescription>Estimated cost for next billing cycle</CardDescription>
+            <CardTitle className="text-xl font-bold">Billing Automation</CardTitle>
+            <CardDescription>Powered by WHMCS Engine</CardDescription>
           </CardHeader>
           <CardContent className="p-8 pt-4">
             <div className="flex items-center gap-4 p-4 bg-slate-50 rounded-2xl border border-slate-100">
@@ -63,10 +84,10 @@ export default function BillingPage() {
                 <DollarSign className="h-5 w-5 text-primary" />
               </div>
               <div className="flex-1">
-                <p className="font-bold">Next Invoice</p>
-                <p className="text-xs text-muted-foreground">Due on Nov 15, 2024</p>
+                <p className="font-bold">Next Cycle</p>
+                <p className="text-xs text-muted-foreground">Automatic invoice generation</p>
               </div>
-              <p className="font-black text-xl">$0.00</p>
+              <ExternalLink className="h-5 w-5 text-slate-300" />
             </div>
           </CardContent>
         </Card>
@@ -74,18 +95,18 @@ export default function BillingPage() {
 
       <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
         <CardHeader className="p-8 pb-4">
-          <CardTitle className="text-xl font-bold">Invoices</CardTitle>
-          <CardDescription>Your complete payment history</CardDescription>
+          <CardTitle className="text-xl font-bold">Invoice History</CardTitle>
+          <CardDescription>Official billing records from Hostxeon</CardDescription>
         </CardHeader>
         <CardContent className="p-8 pt-0">
-          {isLoading ? (
+          {loading ? (
             <div className="py-20 flex justify-center"><Loader2 className="h-8 w-8 animate-spin text-primary" /></div>
-          ) : invoices && invoices.length > 0 ? (
+          ) : invoices.length > 0 ? (
             <Table>
               <TableHeader>
                 <TableRow className="border-slate-100 hover:bg-transparent">
-                  <TableHead className="font-black text-xs uppercase tracking-widest">Number</TableHead>
-                  <TableHead className="font-black text-xs uppercase tracking-widest">Date</TableHead>
+                  <TableHead className="font-black text-xs uppercase tracking-widest">ID</TableHead>
+                  <TableHead className="font-black text-xs uppercase tracking-widest">Due Date</TableHead>
                   <TableHead className="font-black text-xs uppercase tracking-widest">Amount</TableHead>
                   <TableHead className="font-black text-xs uppercase tracking-widest">Status</TableHead>
                   <TableHead className="text-right"></TableHead>
@@ -94,17 +115,20 @@ export default function BillingPage() {
               <TableBody>
                 {invoices.map((invoice) => (
                   <TableRow key={invoice.id} className="border-slate-100">
-                    <TableCell className="font-bold">{invoice.invoiceNumber}</TableCell>
-                    <TableCell>{new Date(invoice.issueDate).toLocaleDateString()}</TableCell>
-                    <TableCell className="font-bold">${invoice.totalAmount.toFixed(2)}</TableCell>
+                    <TableCell className="font-bold">#{invoice.invoicenum || invoice.id}</TableCell>
+                    <TableCell>{invoice.duedate}</TableCell>
+                    <TableCell className="font-bold">${parseFloat(invoice.total).toFixed(2)}</TableCell>
                     <TableCell>
-                      <Badge className={invoice.status === 'paid' ? 'bg-green-100 text-green-700' : 'bg-amber-100 text-amber-700'}>
+                      <Badge className={`border-none font-bold ${
+                        invoice.status === 'Paid' ? 'bg-green-100 text-green-700' : 
+                        invoice.status === 'Unpaid' ? 'bg-rose-100 text-rose-700' : 'bg-slate-100 text-slate-700'
+                      }`}>
                         {invoice.status.toUpperCase()}
                       </Badge>
                     </TableCell>
                     <TableCell className="text-right">
-                      <Button variant="ghost" size="icon" className="text-slate-400 hover:text-primary">
-                        <Download className="h-4 w-4" />
+                      <Button asChild variant="ghost" size="sm" className="font-bold text-primary">
+                        <a href={`${WHMCS_URL}/viewinvoice.php?id=${invoice.id}`} target="_blank">Pay Now</a>
                       </Button>
                     </TableCell>
                   </TableRow>

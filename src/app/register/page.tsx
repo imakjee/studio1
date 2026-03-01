@@ -12,6 +12,7 @@ import { useAuth, useFirestore } from "@/firebase";
 import { createUserWithEmailAndPassword } from "firebase/auth";
 import { doc, setDoc, serverTimestamp } from "firebase/firestore";
 import { useToast } from "@/hooks/use-toast";
+import { createWhmcsClient } from "@/lib/whmcs-service";
 
 export default function RegisterPage() {
   const [firstName, setFirstName] = useState("");
@@ -28,15 +29,31 @@ export default function RegisterPage() {
     e.preventDefault();
     setLoading(true);
     try {
+      // 1. Create Firebase User
       const userCredential = await createUserWithEmailAndPassword(auth, email, password);
       const user = userCredential.user;
 
-      // Create user profile in Firestore
+      // 2. Create WHMCS Client (Server-side via Action)
+      let whmcsClientId = null;
+      try {
+        const whmcsResult = await createWhmcsClient({
+          firstname: firstName,
+          lastname: lastName,
+          email: email,
+        });
+        whmcsClientId = whmcsResult.clientid;
+      } catch (whmcsError) {
+        console.error("Failed to sync with WHMCS:", whmcsError);
+        // We continue anyway, but ideally, we'd handle this retry logic
+      }
+
+      // 3. Create user profile in Firestore
       await setDoc(doc(db, "userProfiles", user.uid), {
         id: user.uid,
         email: email,
         firstName: firstName,
         lastName: lastName,
+        whmcsClientId: whmcsClientId,
         role: "client",
         createdAt: serverTimestamp(),
         updatedAt: serverTimestamp(),

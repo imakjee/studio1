@@ -1,8 +1,9 @@
+
 "use client";
 
-import { useState } from "react";
-import { useUser, useFirestore, useCollection, useMemoFirebase } from "@/firebase";
-import { collection, query, where, addDoc, serverTimestamp, orderBy } from "firebase/firestore";
+import { useState, useEffect } from "react";
+import { useUser, useFirestore, useDoc, useMemoFirebase } from "@/firebase";
+import { doc } from "firebase/firestore";
 import { Card, CardContent, CardHeader, CardTitle, CardDescription } from "@/components/ui/card";
 import { Button } from "@/components/ui/button";
 import { Input } from "@/components/ui/input";
@@ -12,48 +13,61 @@ import { Dialog, DialogContent, DialogHeader, DialogTitle, DialogTrigger, Dialog
 import { LifeBuoy, Plus, MessageSquare, Clock, ArrowRight, Loader2 } from "lucide-react";
 import Link from "next/link";
 import { useToast } from "@/hooks/use-toast";
+import { getClientTickets, openSupportTicket } from "@/lib/whmcs-service";
 
 export default function TicketsPage() {
   const { user } = useUser();
   const db = useFirestore();
   const { toast } = useToast();
+  const [tickets, setTickets] = useState<any[]>([]);
+  const [loading, setLoading] = useState(true);
   const [isCreateModalOpen, setIsCreateModalOpen] = useState(false);
   const [isSubmitting, setIsSubmitting] = useState(false);
-  const [newTicket, setNewTicket] = useState({ subject: "", description: "", priority: "medium" });
+  const [newTicket, setNewTicket] = useState({ subject: "", description: "", priority: "Medium" });
 
-  const ticketsQuery = useMemoFirebase(() => {
+  const profileRef = useMemoFirebase(() => {
     if (!db || !user) return null;
-    return query(
-      collection(db, "tickets"),
-      where("userId", "==", user.uid),
-      orderBy("createdAt", "desc")
-    );
+    return doc(db, "userProfiles", user.uid);
   }, [db, user]);
 
-  const { data: tickets, isLoading } = useCollection(ticketsQuery);
+  const { data: profile } = useDoc(profileRef);
+
+  const fetchTickets = async () => {
+    if (!profile?.whmcsClientId) return;
+    try {
+      const res = await getClientTickets(profile.whmcsClientId);
+      setTickets(res.tickets?.ticket || []);
+    } catch (error) {
+      console.error("Failed to fetch tickets:", error);
+    } finally {
+      setLoading(false);
+    }
+  };
+
+  useEffect(() => {
+    if (profile) fetchTickets();
+  }, [profile]);
 
   const handleCreateTicket = async () => {
-    if (!user || !db || !newTicket.subject || !newTicket.description) return;
+    if (!profile?.whmcsClientId || !newTicket.subject || !newTicket.description) return;
     setIsSubmitting(true);
     
     try {
-      await addDoc(collection(db, "tickets"), {
-        userId: user.uid,
-        subject: newTicket.subject,
-        description: newTicket.description,
-        status: "open",
-        priority: newTicket.priority,
-        createdAt: serverTimestamp(),
-        updatedAt: serverTimestamp(),
-      });
+      await openSupportTicket(
+        profile.whmcsClientId,
+        newTicket.subject,
+        newTicket.description,
+        newTicket.priority
+      );
 
       toast({
         title: "Ticket Created",
-        description: "A support specialist will review your request shortly.",
+        description: "Your support request has been submitted to WHMCS.",
       });
       
-      setNewTicket({ subject: "", description: "", priority: "medium" });
+      setNewTicket({ subject: "", description: "", priority: "Medium" });
       setIsCreateModalOpen(false);
+      fetchTickets();
     } catch (error: any) {
       toast({
         variant: "destructive",
@@ -66,12 +80,11 @@ export default function TicketsPage() {
   };
 
   const getStatusColor = (status: string) => {
-    switch (status) {
+    switch (status.toLowerCase()) {
       case "open": return "bg-blue-100 text-blue-700";
-      case "in_progress": return "bg-amber-100 text-amber-700";
+      case "answered": return "bg-green-100 text-green-700";
       case "closed": return "bg-slate-100 text-slate-700";
-      case "awaiting_response": return "bg-green-100 text-green-700";
-      default: return "bg-slate-100 text-slate-700";
+      default: return "bg-amber-100 text-amber-700";
     }
   };
 
@@ -80,7 +93,7 @@ export default function TicketsPage() {
       <div className="flex flex-col md:flex-row md:items-center justify-between gap-6">
         <div>
           <h1 className="text-3xl font-black font-headline mb-2">Support Tickets</h1>
-          <p className="text-muted-foreground">Need help? Open a ticket and our experts will assist you.</p>
+          <p className="text-muted-foreground">Need help? Open a ticket directly with our engineering team.</p>
         </div>
         
         <Dialog open={isCreateModalOpen} onOpenChange={setIsCreateModalOpen}>
@@ -128,9 +141,9 @@ export default function TicketsPage() {
 
       <Card className="border-none shadow-sm rounded-3xl overflow-hidden">
         <CardContent className="p-0">
-          {isLoading ? (
+          {loading ? (
             <div className="p-20 flex justify-center"><Loader2 className="h-10 w-10 animate-spin text-primary" /></div>
-          ) : tickets && tickets.length > 0 ? (
+          ) : tickets.length > 0 ? (
             <div className="divide-y divide-slate-100">
               {tickets.map((ticket) => (
                 <Link 
@@ -146,10 +159,10 @@ export default function TicketsPage() {
                       <p className="font-bold text-lg">{ticket.subject}</p>
                       <div className="flex items-center gap-4 mt-1">
                         <span className="text-xs text-muted-foreground flex items-center gap-1">
-                          <Clock className="h-3 w-3" /> {new Date(ticket.createdAt?.toDate()).toLocaleDateString()}
+                          <Clock className="h-3 w-3" /> {ticket.lastreply}
                         </span>
                         <Badge className={`${getStatusColor(ticket.status)} border-none text-[10px] font-black`}>
-                          {ticket.status.replace("_", " ").toUpperCase()}
+                          {ticket.status.toUpperCase()}
                         </Badge>
                       </div>
                     </div>
